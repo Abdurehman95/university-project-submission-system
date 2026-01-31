@@ -1,0 +1,99 @@
+.features-hero {
+  padding-top: 150px;
+  text-align: center;
+}
+
+.roles-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin: var(--spacing-lg) 0;
+}
+
+.role-card {
+  padding: 3rem 2rem;
+  transition: var(--transition-smooth);
+}
+
+.role-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--color-accent-primary);
+}
+
+.role-icon {
+  font-size: 3rem;
+  color: var(--color-accent-primary);
+  margin-bottom: 2rem;
+}
+
+.feature-list {
+  text-align: left;
+  margin-top: 2rem;
+}
+
+.feature-list li {
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--color-text-secondary);
+}
+
+.list-icon {
+  color: var(--color-accent-secondary);
+}
+
+.workflow-card {
+  padding: 4rem;
+  text-align: center;
+  background: var(--color-accent-gradient);
+  color: white;
+}
+
+.workflow-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.workflow-icon {
+  font-size: 3.5rem;
+}
+
+.workflow-card h2 {
+  font-size: 2.5rem;
+  margin: 0;
+}
+
+.workflow-card p {
+  font-size: 1.25rem;
+  max-width: 800px;
+  margin: 0 auto;
+  opacity: 0.9;
+}
+
+.security-banner {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  padding: 3rem;
+}
+
+.security-icon {
+  font-size: 4rem;
+  color: #10b981;
+  /* Emerald */
+}
+
+@media (max-width: 1024px) {
+  .roles-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .security-banner {
+    flex-direction: column;
+    text-align: center;
+  }
+}
