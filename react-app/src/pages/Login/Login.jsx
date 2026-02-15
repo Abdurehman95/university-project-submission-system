@@ -1,16 +1,25 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { FiMail, FiLock, FiArrowRight } from 'react-icons/fi';
-import { Link } from 'react-router-dom';
+import { FiMail, FiLock, FiArrowRight, FiAlertCircle } from 'react-icons/fi';
+import { useNavigate, Link } from 'react-router-dom';
 import './Auth.css';
 
 const Login = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: '', password: '' });
+  const [error, setError] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Login attempt:', formData);
-    // Role-aware redirect logic would go here
+
+    // Demo Mock logic
+    if (formData.email === 'student@university.edu' && formData.password === 'password123') {
+      navigate('/dashboard/student');
+    } else if (formData.email === 'instructor@university.edu' && formData.password === 'password123') {
+      navigate('/dashboard/instructor');
+    } else {
+      setError('Invalid demo credentials. Use student@university.edu or instructor@university.edu (password: password123)');
+    }
   };
 
   return (
@@ -24,6 +33,16 @@ const Login = () => {
           <h2 className="text-gradient">Welcome Back</h2>
           <p>Login to your account to continue</p>
         </div>
+
+        {error && (
+          <motion.div
+            className="auth-error"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <FiAlertCircle /> {error}
+          </motion.div>
+        )}
 
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
