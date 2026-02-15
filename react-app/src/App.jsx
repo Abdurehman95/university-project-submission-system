@@ -12,6 +12,8 @@ import ForAdmins from './pages/ForAdmins/ForAdmins';
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
 import Contact from './pages/Contact/Contact';
+import StudentDashboard from './pages/StudentDashboard/StudentDashboard';
+import InstructorDashboard from './pages/InstructorDashboard/InstructorDashboard';
 
 function App() {
   return (
@@ -33,6 +35,8 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/dashboard/student" element={<StudentDashboard />} />
+            <Route path="/dashboard/instructor" element={<InstructorDashboard />} />
           </Routes>
         </main>
         <Footer />
