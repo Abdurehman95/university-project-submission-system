@@ -17,8 +17,10 @@ const Login = () => {
       navigate('/dashboard/student');
     } else if (formData.email === 'instructor@university.edu' && formData.password === 'password123') {
       navigate('/dashboard/instructor');
+    } else if (formData.email === 'admin@university.edu' && formData.password === 'password123') {
+      navigate('/dashboard/admin');
     } else {
-      setError('Invalid demo credentials. Use student@university.edu or instructor@university.edu (password: password123)');
+      setError('Invalid demo credentials. Use student@university.edu, instructor@university.edu, or admin@university.edu (password: password123)');
     }
   };
 
