@@ -1,18 +1,39 @@
-# React + Vite
+# 🎓 University Project Submission System - Frontend (UPSS)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This directory contains the **React 19** frontend application for the University Project Submission System.
 
-Currently, two official plugins are available:
+## 🛠️ Technology Highlights
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **React 19:** Functional components with modern hooks and state management.
+- **Vite 7:** Lighting-fast development server and production builds.
+- **Framer Motion:** High-performance animations and micro-interactions.
+- **React Router 7:** SPA routing with declarative navigation.
+- **Sleek UI:** Custom CSS with Glassmorphism and responsive design.
 
-## React Compiler
+## 📁 Directory Structure
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+- `src/components/`: Shared UI components (dashboards, layouts, forms).
+- `src/pages/`: Page-level components for each route (Home, Admin, Student, Instructor).
+- `src/assets/`: Static image and icon assets.
+- `src/styles/`: Global styles and CSS variable definitions.
 
-Note: This will impact Vite dev & build performances.
+## ⚡ Quick Start
 
-## Expanding the ESLint configuration
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+2. Start the dev server:
+   ```bash
+   npm run dev
+   ```
+
+3. Build for production:
+   ```bash
+   npm run build
+   ```
+
+---
+
+For full project documentation, including setup and contribution guidelines, please refer to the [Main README](../README.md).
