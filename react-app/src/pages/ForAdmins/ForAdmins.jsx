@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { FiUsers, FiSettings, FiLayout, FiShield } from 'react-icons/fi';
 import '../ForStudents/RolePage.css';
 
@@ -33,6 +34,13 @@ const ForAdmins = () => {
               <p>{item.desc}</p>
             </motion.div>
           ))}
+        </div>
+      </section>
+
+      <section className="role-cta container">
+        <div className="cta-wrapper glass-panel">
+          <h2>Ready to manage your institution?</h2>
+          <Link to="/dashboard/admin" className="btn btn-primary">Go to Dashboard</Link>
         </div>
       </section>
     </div>
