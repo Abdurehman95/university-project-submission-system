@@ -16,6 +16,33 @@ import StudentDashboard from './pages/StudentDashboard/StudentDashboard';
 import AdminDashboard from './pages/AdminDashboard/AdminDashboard';
 import InstructorDashboard from './pages/InstructorDashboard/InstructorDashboard';
 
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ padding: '2rem', background: 'white', color: 'red', height: '100vh' }}>
+          <h1>Oops! A technical error occurred.</h1>
+          <p>Please share the message below with the developer:</p>
+          <pre style={{ background: '#f8f8f8', padding: '1rem', marginTop: '1rem', overflow: 'auto' }}>
+            {this.state.error?.toString()}
+          </pre>
+          <button onClick={() => window.location.reload()} style={{ marginTop: '1rem', padding: '0.5rem 1rem' }}>
+            Reload Page
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 const AppContent = () => {
   const location = useLocation();
   const hideNavPaths = ['/dashboard/student', '/dashboard/admin', '/dashboard/instructor'];
@@ -52,7 +79,9 @@ const AppContent = () => {
 function App() {
   return (
     <Router>
-      <AppContent />
+      <ErrorBoundary>
+        <AppContent />
+      </ErrorBoundary>
     </Router>
   );
 }
