@@ -1,7 +1,7 @@
 .admin-dashboard {
   display: flex;
   min-height: 100vh;
-  padding-top: 100px;
+  padding-top: 40px;
   padding-bottom: 40px;
   gap: 2rem;
 }
@@ -9,9 +9,9 @@
 /* Sidebar Styling */
 .admin-sidebar {
   width: 280px;
-  height: calc(100vh - 140px);
+  height: calc(100vh - 80px);
   position: sticky;
-  top: 100px;
+  top: 40px;
   display: flex;
   flex-direction: column;
   padding: 1.5rem;

@@ -76,15 +76,15 @@ const StudentDashboard = () => {
 
       <div className="dashboard-main-content">
         <div className="content-left">
-          {/* Upcoming Deadlines */}
+          {/* View Assignments & Track Deadlines */}
           <motion.section
             className="dashboard-section glass-panel"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
           >
             <div className="section-header">
-              <h2><FiCalendar /> Upcoming Deadlines</h2>
-              <button className="view-all">View Calendar</button>
+              <h2><FiCalendar /> Track Deadlines</h2>
+              <button className="view-all">View All Assignments</button>
             </div>
             <div className="deadline-list">
               {deadlines.map(deadline => (
@@ -104,7 +104,7 @@ const StudentDashboard = () => {
             </div>
           </motion.section>
 
-          {/* Recent Submissions */}
+          {/* Submit Projects & Track Submissions */}
           <motion.section
             className="dashboard-section glass-panel"
             initial={{ opacity: 0, x: -20 }}
@@ -112,8 +112,8 @@ const StudentDashboard = () => {
             transition={{ delay: 0.2 }}
           >
             <div className="section-header">
-              <h2><FiFileText /> Recent Submissions</h2>
-              <button className="view-all">See All</button>
+              <h2><FiFileText /> My Submissions</h2>
+              <button className="view-all">Upload New Project</button>
             </div>
             <div className="submission-table-wrapper">
               <table className="submission-table">
@@ -148,14 +148,14 @@ const StudentDashboard = () => {
         </div>
 
         <div className="content-right">
-          {/* Feedback Section */}
+          {/* Read Feedback */}
           <motion.section
             className="dashboard-section glass-panel"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
           >
             <div className="section-header">
-              <h2><FiMessageSquare /> Recent Feedback</h2>
+              <h2><FiMessageSquare /> Read Feedback</h2>
             </div>
             <div className="feedback-preview">
               <div className="feedback-card">

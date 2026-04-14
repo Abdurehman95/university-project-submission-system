@@ -5,10 +5,29 @@
 .role-hero {
   padding-top: 150px;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.one-liner {
+  margin-top: 1rem;
+  padding: 1rem 2.5rem;
+  font-size: 1.25rem;
+  max-width: fit-content;
+  border: 1px solid var(--color-accent-primary);
+  background: rgba(99, 102, 241, 0.03);
 }
 
 .role-features {
   margin-top: var(--spacing-lg);
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2.5rem;
 }
 
 .role-feature-card {

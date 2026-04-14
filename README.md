@@ -8,6 +8,11 @@ A modern, efficient, and user-friendly platform designed to streamline the proje
 
 ---
 
+## 📖 Documentation
+For a detailed breakdown of the system architecture, features, and design philosophy, please refer to our **[Full System Documentation](SYSTEM_DOCUMENTATION.md)**.
+
+---
+
 ## 🌟 Key Features
 
 ### 👨‍🎓 For Students
