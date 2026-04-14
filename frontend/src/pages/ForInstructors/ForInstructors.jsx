@@ -1,31 +1,33 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { FiPlusSquare, FiEdit, FiTrendingUp, FiPieChart } from 'react-icons/fi';
+import { FiPlusSquare, FiEdit, FiUsers, FiFileText, FiMessageSquare } from 'react-icons/fi';
 import '../ForStudents/RolePage.css';
 
 const ForInstructors = () => {
-  const content = [
-    { title: 'Assignment Creation', desc: 'Powerful tools to define rubrics, setting deadlines, and attach resources.', icon: <FiPlusSquare /> },
-    { title: 'Easy Grading', desc: 'Side-by-side view for grading and providing inline feedback on submissions.', icon: <FiEdit /> },
-    { title: 'Performance Tracking', desc: 'Identify struggling students early with advanced performance metrics.', icon: <FiTrendingUp /> },
-    { title: 'Automated Reports', desc: 'Export grades and participation data with a single click.', icon: <FiPieChart /> }
+  const coreFunctions = [
+    { title: 'Create Assignments', desc: 'Define project requirements with specific titles, descriptions, and hard deadlines.', icon: <FiPlusSquare /> },
+    { title: 'Manage Courses', desc: 'Effortlessly handle students enrolled in your courses and track their participation.', icon: <FiUsers /> },
+    { title: 'View Submissions', desc: 'Access all uploaded student work in a centralized, organized repository.', icon: <FiFileText /> },
+    { title: 'Grade Projects', desc: 'Evaluate student performance and assign marks/scores through a streamlined interface.', icon: <FiEdit /> },
+    { title: 'Provide Feedback', desc: 'Write constructive comments to help students understand their mistakes and grow.', icon: <FiMessageSquare /> }
   ];
 
   return (
     <div className="role-page instructors">
       <section className="role-hero container">
-        <h1 className="section-title">Elevate Your <span className="text-gradient">Teaching</span></h1>
-        <p className="section-subtitle">For Instructors: Reduce administrative burden and focus on what matters—educating.</p>
+        <h1 className="section-title">Instructor = <span className="text-gradient">“Create & Evaluate”</span></h1>
+        <p className="section-subtitle">🎯 <strong>Main Purpose:</strong> Give assignments and assess student work</p>
       </section>
 
       <section className="role-features container">
+        <h2 className="section-title" style={{ fontSize: '2rem', marginBottom: '2rem' }}>🔑 Core Functions</h2>
         <div className="features-grid">
-          {content.map((item, i) => (
+          {coreFunctions.map((item, i) => (
             <motion.div
               key={item.title}
               className="role-feature-card glass-panel"
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
             >
               <div className="role-feature-icon" style={{ color: 'var(--color-accent-secondary)' }}>{item.icon}</div>

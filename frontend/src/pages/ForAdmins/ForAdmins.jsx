@@ -1,31 +1,33 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { FiUsers, FiSettings, FiLayout, FiShield } from 'react-icons/fi';
+import { FiUsers, FiSettings, FiLayout, FiShield, FiActivity, FiDatabase } from 'react-icons/fi';
 import '../ForStudents/RolePage.css';
 
 const ForAdmins = () => {
   const content = [
-    { title: 'User Management', desc: 'Full control over student and instructor accounts, roles, and permissions.', icon: <FiUsers /> },
-    { title: 'Course Control', desc: 'Centralized management of university departments, courses, and sections.', icon: <FiLayout /> },
-    { title: 'Reports & Analytics', desc: 'Global system health metrics and university-wide performance data.', icon: <FiSettings /> },
-    { title: 'System Security', desc: 'Advanced configuration of authentication, encryption, and data retention.', icon: <FiShield /> }
+    { title: 'User Management', desc: 'Manage students, instructors, and admins. Create, edit, search, and filter users by role.', icon: <FiUsers /> },
+    { title: 'Role Assignment', desc: 'Secure system for assigning or changing user roles across the entire institution.', icon: <FiShield /> },
+    { title: 'Course & Dept Control', desc: 'Manage departments, create courses, and assign instructors to specific academic sections.', icon: <FiLayout /> },
+    { title: 'System Monitoring', desc: 'Access real-time activity logs, analytics, and global system events.', icon: <FiActivity /> },
+    { title: 'Access & Security', desc: 'Advanced control over permissions, account status, and sensitive audit trails.', icon: <FiDatabase /> },
+    { title: 'Global Settings', desc: 'Configure platform-wide parameters and operational security protocols.', icon: <FiSettings /> }
   ];
 
   return (
     <div className="role-page admins">
       <section className="role-hero container">
-        <h1 className="section-title">Institutional <span className="text-gradient">Control</span></h1>
-        <p className="section-subtitle">For Admins: Manage your entire academic institution from a single, secure dashboard.</p>
+        <h1 className="section-title">Admin Module = <span className="text-gradient">“System Controller”</span></h1>
+        <p className="section-subtitle">🎯 <strong>Main Purpose:</strong> Responsible for managing the entire platform, users, and operations.</p>
       </section>
 
       <section className="role-features container">
+        <h2 className="section-title" style={{ fontSize: '2rem', marginBottom: '2rem' }}>🔑 Core Functions</h2>
         <div className="features-grid">
           {content.map((item, i) => (
             <motion.div
               key={item.title}
               className="role-feature-card glass-panel"
-              initial={{ opacity: 0, y: -30 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
             >
@@ -34,13 +36,6 @@ const ForAdmins = () => {
               <p>{item.desc}</p>
             </motion.div>
           ))}
-        </div>
-      </section>
-
-      <section className="role-cta container">
-        <div className="cta-wrapper glass-panel">
-          <h2>Ready to manage your institution?</h2>
-          <Link to="/dashboard/admin" className="btn btn-primary">Go to Dashboard</Link>
         </div>
       </section>
     </div>
