@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { HiMenuAlt3, HiX, HiChevronDown } from 'react-icons/hi';
+import { HiMenuAlt3, HiX } from 'react-icons/hi';
 import './Navbar.css';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+
   const location = useLocation();
 
   useEffect(() => {
@@ -26,11 +26,7 @@ const Navbar = () => {
     { name: 'Contact', path: '/contact' },
   ];
 
-  const roleLinks = [
-    { name: 'Students', path: '/students' },
-    { name: 'Instructors', path: '/instructors' },
-    { name: 'Admins', path: '/admins' },
-  ];
+
 
   return (
     <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
@@ -48,41 +44,13 @@ const Navbar = () => {
                 to={link.path}
                 className={`nav-item ${location.pathname === link.path ? 'active' : ''}`}
               >
+
                 {link.name}
               </Link>
             </li>
           ))}
 
-          <li
-            className="nav-dropdown-wrapper"
-            onMouseEnter={() => setDropdownOpen(true)}
-            onMouseLeave={() => setDropdownOpen(false)}
-          >
-            <div className={`nav-item dropdown-trigger ${roleLinks.some(l => l.path === location.pathname) ? 'active' : ''}`}>
-              Roles <HiChevronDown className={`chevron ${dropdownOpen ? 'rotate' : ''}`} />
-            </div>
-            <AnimatePresence>
-              {dropdownOpen && (
-                <motion.ul
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 10 }}
-                  className="nav-dropdown-menu glass-panel"
-                >
-                  {roleLinks.map((link) => (
-                    <li key={link.path}>
-                      <Link
-                        to={link.path}
-                        className={`dropdown-item ${location.pathname === link.path ? 'active' : ''}`}
-                      >
-                        {link.name}
-                      </Link>
-                    </li>
-                  ))}
-                </motion.ul>
-              )}
-            </AnimatePresence>
-          </li>
+
         </ul>
 
         <div className="nav-actions">
@@ -116,17 +84,7 @@ const Navbar = () => {
                   </Link>
                 ))}
 
-                <div className="mobile-divider">Roles</div>
-                {roleLinks.map((link) => (
-                  <Link
-                    key={link.path}
-                    to={link.path}
-                    onClick={() => setIsOpen(false)}
-                    className={`mobile-item role-mobile-item ${location.pathname === link.path ? 'active' : ''}`}
-                  >
-                    {link.name}
-                  </Link>
-                ))}
+
               </div>
 
               <div className="mobile-actions">
