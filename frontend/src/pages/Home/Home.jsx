@@ -45,8 +45,9 @@ const Home = () => {
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.8 }}
         >
-          {/* Visual card or illustration could go here in the future */}
-          <div className="visual-blob"></div>
+          <div className="hero-image-container">
+            <img src="/pro3.png" alt="University Workspace" className="hero-main-img" />
+          </div>
         </motion.div>
       </section>
 
