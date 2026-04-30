@@ -3,20 +3,27 @@
 :root {
   --font-main: 'Outfit', sans-serif;
 
-  /* Color Palette - Clean Light Professional */
-  --color-bg-primary: #f8fafc;
+  /* Color Palette - Orange HRM Style */
+  --color-bg-primary: #f6f8fb;
   --color-bg-secondary: #ffffff;
-  --color-text-primary: #0f172a;
-  --color-text-secondary: #475569;
+  --color-text-primary: #1f2937;
+  --color-text-secondary: #6b7280;
 
-  --color-accent-primary: #6366f1;
-  /* Indigo */
-  --color-accent-secondary: #ec4899;
-  /* Pink */
-  --color-accent-gradient: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
+  --color-accent-primary: #ff781f; /* Vibrant Orange */
+  --color-accent-hover: #e66a1a;
+  --color-accent-soft: rgba(255, 120, 31, 0.1);
+  --color-accent-gradient: linear-gradient(135deg, #ff781f 0%, #ff9d5c 100%);
 
-  --color-glass: rgba(255, 255, 255, 0.8);
-  --color-glass-border: rgba(0, 0, 0, 0.1);
+  --color-success: #22c55e; /* Green */
+  --color-success-hover: #16a34a;
+  --color-success-soft: rgba(34, 197, 94, 0.1);
+
+  --color-glass: rgba(255, 255, 255, 0.95);
+  --color-glass-border: rgba(0, 0, 0, 0.05);
+
+  /* Dashboard Layout */
+  --sidebar-width: 280px;
+  --header-height: 70px;
 
   /* Spacing */
   --spacing-xs: 0.5rem;
@@ -111,14 +118,27 @@ ul {
 }
 
 .btn-primary {
-  background: var(--color-accent-gradient);
+  background: var(--color-accent-primary);
   color: white;
-  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 4px 15px rgba(255, 120, 31, 0.2);
 }
 
 .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5);
+  transform: translateY(-1px);
+  background: var(--color-accent-hover);
+  box-shadow: 0 6px 20px rgba(255, 120, 31, 0.3);
+}
+
+.btn-success {
+  background: var(--color-success);
+  color: white;
+  box-shadow: 0 4px 15px rgba(34, 197, 94, 0.2);
+}
+
+.btn-success:hover {
+  transform: translateY(-1px);
+  background: var(--color-success-hover);
+  box-shadow: 0 6px 20px rgba(34, 197, 94, 0.3);
 }
 
 .btn-outline {

@@ -5,7 +5,8 @@ import {
   FiBarChart2, FiSettings, FiActivity, FiUser,
   FiPlus, FiSearch, FiFilter, FiDownload, FiEdit2,
   FiTrash2, FiToggleLeft, FiKey, FiMoreVertical,
-  FiBell, FiCalendar, FiShield, FiDatabase, FiAlertTriangle, FiLogOut
+  FiBell, FiCalendar, FiShield, FiDatabase, FiAlertTriangle, FiLogOut,
+  FiCheckSquare, FiStar
 } from 'react-icons/fi';
 import './AdminDashboard.css';
 
@@ -27,6 +28,7 @@ const AdminDashboard = () => {
     { name: 'Overview', icon: <FiGrid /> },
     { name: 'User Management', icon: <FiUsers /> },
     { name: 'Courses & Depts', icon: <FiBook /> },
+    { name: 'Analytics & Reports', icon: <FiBarChart2 /> },
     { name: 'System Logs', icon: <FiActivity /> },
     { name: 'Access Control', icon: <FiShield /> },
     { name: 'Settings', icon: <FiSettings /> },
@@ -44,6 +46,23 @@ const AdminDashboard = () => {
     { id: 2, action: 'Course Created', user: 'Admin System', time: '45 mins ago', level: 'Success' },
     { id: 3, action: 'Permission Change', user: 'Prof. Henderson', time: '2 hours ago', level: 'Warning' },
     { id: 4, action: 'Bulk Export', user: 'Admin User', time: '5 hours ago', level: 'Info' },
+  ];
+
+  const recentReports = [
+    { id: 1, name: 'Weekly User Engagement Report', date: 'Created 12, 2023', status: 'Completed' },
+    { id: 2, name: 'Monthly Enrollment Summary', date: 'Created 11, 2023', status: 'Processing' },
+    { id: 3, name: 'Monthly Enrollment Summary', date: 'Created 13, 2023', status: 'Completed' },
+    { id: 4, name: 'Weekly Engagement Report', date: 'Created 19, 2023', status: 'Processing' },
+  ];
+
+  const [hoveredSegment, setHoveredSegment] = useState(null);
+
+  const deptData = [
+    { label: 'Engineering', value: 30, color: '#ff781f' },
+    { label: 'Arts', value: 36, color: '#6366f1' },
+    { label: 'Sciences', value: 10, color: '#10b981' },
+    { label: 'Department', value: 7, color: '#ec4899' },
+    { label: 'Others', value: 17, color: '#f59e0b' },
   ];
 
   const renderContent = () => {
@@ -68,7 +87,7 @@ const AdminDashboard = () => {
               ))}
             </div>
 
-            <div className="overview-layout" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '2rem' }}>
+            <div className="overview-layout">
               <div className="overview-main">
                 <section className="glass-panel content-section" style={{ padding: '2rem' }}>
                   <div className="section-header" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
@@ -95,7 +114,7 @@ const AdminDashboard = () => {
                 <section className="glass-panel content-section" style={{ padding: '2rem' }}>
                   <h2>Quick Actions</h2>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1.5rem' }}>
-                    <button className="btn btn-primary" style={{ width: '100%' }}><FiUserPlus /> New User Enrollment</button>
+                    <button className="btn btn-success" style={{ width: '100%' }}><FiUserPlus /> New User Enrollment</button>
                     <button className="btn btn-outline" style={{ width: '100%' }}><FiDatabase /> Backup Database</button>
                     <button className="btn btn-outline" style={{ width: '100%', color: '#ef4444' }}><FiAlertTriangle /> System Lockdown</button>
                   </div>
@@ -115,7 +134,7 @@ const AdminDashboard = () => {
               </div>
               <div style={{ display: 'flex', gap: '1rem' }}>
                 <button className="btn btn-outline"><FiFilter /> Filters</button>
-                <button className="btn btn-primary"><FiPlus /> Add New User</button>
+                <button className="btn btn-success"><FiPlus /> Add New User</button>
               </div>
             </div>
 
@@ -170,7 +189,7 @@ const AdminDashboard = () => {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="tab-content">
             <div className="content-toolbar" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2rem' }}>
               <h2>Departmental Oversight</h2>
-              <button className="btn btn-primary"><FiPlus /> Create Department</button>
+              <button className="btn btn-success"><FiPlus /> Create Department</button>
             </div>
             <div className="courses-grid">
               {[
@@ -195,6 +214,209 @@ const AdminDashboard = () => {
           </motion.div>
         );
 
+      case 'Analytics & Reports':
+        return (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="tab-content reports-view">
+            <div className="reports-filters glass-panel">
+              <div className="filter-group">
+                <label>Date Range</label>
+                <div className="filter-selects">
+                  <select defaultValue="30">
+                    <option value="7">Last 7 Days</option>
+                    <option value="30">Last 30 Days</option>
+                    <option value="90">Last 90 Days</option>
+                  </select>
+                  <div className="date-picker-mock"><FiCalendar /> Last 30 Days</div>
+                </div>
+              </div>
+              <div className="filter-group">
+                <label>Department</label>
+                <select defaultValue="all">
+                  <option value="all">All Departments</option>
+                  <option value="cs">Computer Science</option>
+                  <option value="ee">Electrical Engineering</option>
+                </select>
+              </div>
+              <div className="filter-group">
+                <label>User Type</label>
+                <select defaultValue="all">
+                  <option value="all">All Users</option>
+                  <option value="student">Students</option>
+                  <option value="instructor">Instructors</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="reports-layout">
+              <div className="reports-main">
+                <div className="reports-stats-row">
+                  {[
+                    { label: 'Total Enrollments', value: '15,670', trend: '+18%', icon: <FiBook />, color: '#6366f1' },
+                    { label: 'Completion Rate', value: '88.5%', trend: '+5%', icon: <FiCheckSquare />, color: '#10b981' },
+                    { label: 'Inactive Users', value: '310', trend: '-1%', icon: <FiUser />, color: '#ec4899' },
+                    { label: 'Engagement Score', value: '9.1/10', trend: '+0.5%', icon: <FiStar />, color: '#f59e0b' },
+                  ].map((stat, i) => (
+                    <div key={i} className="glass-panel report-stat-card">
+                      <div className="stat-icon-mini" style={{ color: stat.color, background: `${stat.color}15` }}>{stat.icon}</div>
+                      <div className="stat-content">
+                        <h3>{stat.value} <span className="trend-text">{stat.trend}</span></h3>
+                        <p>{stat.label}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="charts-grid">
+                  <div className="glass-panel chart-box">
+                    <div className="chart-header">
+                      <h3>User Growth Trends</h3>
+                      <div className="chart-toggles">
+                        <span>Daily</span>
+                        <span className="active">Weekly</span>
+                        <span>Monthly</span>
+                      </div>
+                    </div>
+                    <div className="chart-placeholder line-chart-mock">
+                      {/* Simple line chart representation */}
+                      <svg width="100%" height="150" viewBox="0 0 400 150">
+                        <path d="M0,120 Q50,100 100,110 T200,60 T300,70 T400,30" fill="none" stroke="var(--color-accent-primary)" strokeWidth="3" />
+                        <circle cx="200" cy="60" r="5" fill="var(--color-accent-primary)" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div className="glass-panel chart-box">
+                    <div className="chart-header">
+                      <h3>Course Enrollment Statistics</h3>
+                      <select className="chart-select"><option>Sort by: All</option></select>
+                    </div>
+                    <div className="chart-placeholder bar-chart-mock">
+                      <div className="bars-container">
+                        {[40, 70, 45, 90, 65, 80, 50, 85, 60, 75].map((h, i) => (
+                          <div key={i} className="bar" style={{ height: `${h}%`, background: i % 2 === 0 ? 'var(--color-accent-primary)' : '#ff9d5c' }}></div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="glass-panel chart-box">
+                    <div className="chart-header">
+                      <h3>Department Performance Breakdown</h3>
+                    </div>
+                    <div className="chart-placeholder donut-container">
+                      <div className="donut-wrapper">
+                        <div 
+                          className="donut-chart-mock"
+                          style={{
+                            background: `conic-gradient(
+                              #ff781f 0% 30%,
+                              #6366f1 30% 66%,
+                              #10b981 66% 76%,
+                              #ec4899 76% 83%,
+                              #f59e0b 83% 100%
+                            )`
+                          }}
+                        >
+                          <div className="donut-center">
+                            {hoveredSegment ? `${hoveredSegment.value}%` : '100%'}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="donut-legend">
+                        {deptData.map((dept, idx) => (
+                          <div 
+                            key={idx} 
+                            className={`legend-item ${hoveredSegment?.label === dept.label ? 'active' : ''}`}
+                            onMouseEnter={() => setHoveredSegment(dept)}
+                            onMouseLeave={() => setHoveredSegment(null)}
+                          >
+                            <span className="dot" style={{ background: dept.color }}></span>
+                            <span className="label">{dept.label}</span>
+                            <span className="value">({dept.value}%)</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="glass-panel chart-box">
+                    <div className="chart-header">
+                      <h3>System Activity Reports</h3>
+                    </div>
+                    <div className="chart-placeholder activity-chart-mock">
+                      <div className="activity-legend">
+                        <span><i style={{ background: '#f59e0b' }}></i> Login Frequency</span>
+                        <span><i style={{ background: '#10b981' }}></i> Active Sessions</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <aside className="reports-sidebar">
+                <div className="glass-panel reports-center">
+                  <div className="reports-center-header">
+                    <h2>Reports Center</h2>
+                    <div className="format-icons">
+                      <FiFileText title="PDF" />
+                      <FiDatabase title="Excel" />
+                      <span className="csv-tag">CSV</span>
+                    </div>
+                  </div>
+                  <div className="report-search">
+                    <FiSearch />
+                    <input type="text" placeholder="Search reports history..." />
+                  </div>
+                  
+                  <div className="recent-reports-list">
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', opacity: 0.6, marginBottom: '1rem' }}>
+                      <span>Recent</span>
+                      <span>Status</span>
+                    </div>
+                    {recentReports.map(report => (
+                      <div key={report.id} className="report-item-mini">
+                        <div className="report-dot"></div>
+                        <div className="report-info">
+                          <p>{report.name}</p>
+                          <span>{report.date}</span>
+                        </div>
+                        <span className={`report-status-pill ${report.status.toLowerCase()}`}>
+                          {report.status}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="scheduled-reports">
+                    <div className="scheduled-header">
+                      <h3>Scheduled Automated Reports</h3>
+                      <div className="scheduled-actions">
+                        <span>Edit</span>
+                        <span className="disable">Disable</span>
+                      </div>
+                    </div>
+                    <div className="scheduled-item">
+                      <span>Scheduled Automated Reports</span>
+                      <div className="scheduled-icons">
+                        <FiEdit2 size={14} />
+                        <FiTrash2 size={14} />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="visual-summary">
+                    <h3>Visual Summary</h3>
+                    <div className="sparklines-grid">
+                      {[1, 2, 3, 4, 5, 6].map(i => (
+                        <div key={i} className="sparkline-item">
+                          <div className="sparkline-mock" style={{ background: i % 2 === 0 ? 'var(--color-accent-soft)' : 'rgba(16, 185, 129, 0.1)' }}></div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </aside>
+            </div>
+          </motion.div>
+        );
+
       default:
         return (
           <div className="glass-panel" style={{ padding: '4rem', textAlign: 'center' }}>
@@ -209,8 +431,8 @@ const AdminDashboard = () => {
     <div className="admin-dashboard">
       <aside className="admin-sidebar">
         <div className="sidebar-brand">
-          <div className="brand-logo">A</div>
-          <span className="text-gradient" style={{ fontWeight: 800, fontSize: '1.25rem' }}>Admin Control</span>
+          <div className="brand-logo">U</div>
+          <span className="text-gradient" style={{ fontWeight: 800, fontSize: '1.25rem' }}>UniSubmit Admin</span>
         </div>
 
         <nav className="sidebar-nav">
@@ -230,31 +452,36 @@ const AdminDashboard = () => {
           <div className="admin-profile-mini">
             <div className="admin-avatar">AD</div>
             <div className="admin-info">
-              <p style={{ fontWeight: 600, fontSize: '0.9rem' }}>Admin Controller</p>
-              <span style={{ fontSize: '0.75rem', opacity: 0.6 }}>Sysadmin Root</span>
+              <p style={{ fontWeight: 600, fontSize: '0.9rem' }}>System Root</p>
+              <span style={{ fontSize: '0.75rem', opacity: 0.6 }}>Super Admin</span>
             </div>
           </div>
-          <button className="nav-item" style={{ marginTop: '1rem', color: '#ef4444' }}>
-            <FiLogOut /> <span className="nav-label">Exit System</span>
+          <button className="nav-item" style={{ marginTop: '1rem', color: '#ef4444', width: '100%', borderRadius: '15px', justifyContent: 'center' }}>
+            <FiLogOut /> <span className="nav-label">Logout</span>
           </button>
         </div>
       </aside>
 
-      <main className="admin-main">
-        <header className="admin-header">
-          <div className="header-left">
-            <h1>{activeTab}</h1>
-            <p className="breadcrumb">System Controller / {activeTab}</p>
+      <header className="admin-header">
+        <div className="header-left">
+          <h1>{activeTab}</h1>
+        </div>
+        <div className="header-right">
+          <button className="btn-upgrade">
+            <FiPlus /> Upgrade Plan
+          </button>
+          <div className="header-user-dropdown">
+            <img 
+              src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=100" 
+              alt="Profile" 
+              className="header-avatar"
+            />
+            <span style={{ fontWeight: 500, fontSize: '0.9rem' }}>muser 56788 <FiGrid size={12} style={{ marginLeft: '4px', opacity: 0.6 }} /></span>
           </div>
-          <div className="header-right">
-            <button className="icon-btn-header"><FiBell /><span className="notif-badge">3</span></button>
-            <div className="header-date" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem', background: 'var(--color-bg-secondary)', borderRadius: '12px', border: '1px solid var(--color-glass-border)' }}>
-              <FiCalendar />
-              <span style={{ fontWeight: 600 }}>Oct 24, 2023</span>
-            </div>
-          </div>
-        </header>
+        </div>
+      </header>
 
+      <main className="admin-main">
         <div className="admin-content-area">
           <AnimatePresence mode="wait">
             {renderContent()}

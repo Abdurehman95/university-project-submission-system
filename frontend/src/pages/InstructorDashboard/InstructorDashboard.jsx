@@ -98,7 +98,7 @@ const InstructorDashboard = () => {
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="courses-view">
             <div className="section-header-row">
               <h2>Course Management</h2>
-              <button className="btn btn-primary"><FiPlus /> Add Course</button>
+              <button className="btn btn-success"><FiPlus /> Add Course</button>
             </div>
             <div className="courses-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem', marginTop: '2rem' }}>
               {courses.map(course => (
@@ -155,7 +155,7 @@ const InstructorDashboard = () => {
                 </div>
                 <div className="form-actions" style={{ gridColumn: 'span 2', display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1rem' }}>
                   <button type="button" className="btn btn-outline">Save Draft</button>
-                  <button type="submit" className="btn btn-primary">Publish Assignment</button>
+                  <button type="submit" className="btn btn-success">Publish Assignment</button>
                 </div>
               </form>
             </div>
@@ -217,7 +217,7 @@ const InstructorDashboard = () => {
     <div className="instructor-dashboard-wrapper">
       <aside className="instructor-sidebar">
         <div className="sidebar-brand">
-          <div className="brand-icon">RH</div>
+          <div className="brand-icon">U</div>
           <span className="text-gradient" style={{ fontWeight: 800 }}>UniSubmit</span>
         </div>
 
@@ -244,23 +244,32 @@ const InstructorDashboard = () => {
               <p style={{ fontSize: '0.75rem', opacity: 0.6 }}>Instructor</p>
             </div>
           </div>
-          <button className="nav-link" style={{ marginTop: '1.5rem', width: '100%', border: 'none', background: 'transparent' }}>
+          <button className="nav-link" style={{ marginTop: '1.5rem', width: '100%', border: 'none', background: 'transparent', justifyContent: 'center' }}>
             <FiLogOut /> <span className="nav-label">Logout</span>
           </button>
         </div>
       </aside>
 
-      <main className="instructor-main">
-        <div className="dashboard-top">
-          <div>
-            <h1>{activeSection}</h1>
-            <p>Managing Fall 2023 Academic Term</p>
-          </div>
-          <div className="header-notif">
-            <button className="btn-icon"><FiBell /></button>
+      <header className="instructor-header">
+        <div className="header-left">
+          <h1>{activeSection}</h1>
+        </div>
+        <div className="header-right">
+          <button className="btn-upgrade">
+            <FiPlus /> Upgrade
+          </button>
+          <div className="header-user-dropdown">
+            <img 
+              src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=100" 
+              alt="Profile" 
+              className="header-avatar"
+            />
+            <span style={{ fontWeight: 500, fontSize: '0.9rem' }}>muser 56788 <FiGrid size={12} style={{ marginLeft: '4px', opacity: 0.6 }} /></span>
           </div>
         </div>
+      </header>
 
+      <main className="instructor-main">
         {renderSection()}
 
         {/* Evaluation & Grading Modal */}
@@ -339,7 +348,7 @@ const InstructorDashboard = () => {
                         </div>
                       </div>
                       <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-                        <button type="submit" className="btn btn-primary" style={{ flex: 1 }}>Submit Evaluation <FiSend /></button>
+                        <button type="submit" className="btn btn-success" style={{ flex: 1 }}>Submit Evaluation <FiSend /></button>
                       </div>
                     </form>
                   </div>
