@@ -286,88 +286,78 @@
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1024px) {
   .instructor-dashboard-wrapper {
-    grid-template-columns: 80px 1fr;
+    grid-template-columns: 1fr;
   }
 
   .instructor-sidebar {
-    width: 80px;
+    position: fixed;
+    left: -100%;
+    top: 0;
+    bottom: 0;
+    z-index: 1000;
+    width: var(--sidebar-width);
+    transition: left var(--transition-smooth);
+    border-radius: 0 40px 40px 0;
+    box-shadow: 20px 0 50px rgba(0, 0, 0, 0.1);
+    background: white;
   }
 
-  .nav-label,
-  .sidebar-brand span,
-  .user-name,
-  .user-info p {
+  .instructor-sidebar.open {
+    left: 0;
+  }
+
+  .sidebar-overlay {
     display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    z-index: 999;
   }
 
-  .sidebar-brand,
-  .user-snippet {
-    justify-content: center;
-    padding: 0.5rem;
+  .sidebar-open .sidebar-overlay {
+    display: block;
   }
-  
-  .nav-link {
-    width: 60px;
-    justify-content: center;
-    padding: 1rem 0;
-    border-radius: 15px;
-    margin: 0 auto;
+
+  .instructor-header, .instructor-main {
+    grid-column: 1;
+  }
+
+  .mobile-menu-btn {
+    display: block;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: white; /* Header is orange, icon should be white */
+    cursor: pointer;
+    margin-right: 1rem;
+  }
+
+  .nav-label {
+    display: block !important;
+  }
+
+  .user-info p, .user-name {
+    display: block !important;
+  }
+
+  .sidebar-brand span {
+    display: block !important;
   }
 }
 
 @media (max-width: 768px) {
-  .instructor-dashboard-wrapper {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto 1fr;
-  }
-
-  .instructor-sidebar {
-    grid-row: 2;
-    width: 100%;
-    height: auto;
-    position: sticky;
-    top: var(--header-height);
-    flex-direction: row;
-    padding: 0.5rem 0;
-    border-radius: 0;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--color-glass-border);
-  }
-
-  .sidebar-nav {
-    flex-direction: row;
-    overflow-x: auto;
-    padding: 0 1rem;
-    gap: 0.5rem;
-    scrollbar-width: none;
-  }
-
-  .sidebar-nav::-webkit-scrollbar {
-    display: none;
-  }
-
-  .nav-link {
-    padding: 0.6rem 1rem;
-    border-radius: 12px;
-    white-space: nowrap;
-    width: auto;
-    margin: 0;
+  .instructor-header {
+    padding: 0 1.5rem;
   }
 
   .instructor-main {
-    grid-column: 1;
     padding: 1.5rem 1rem;
-  }
-  
-  .instructor-header {
-    grid-column: 1;
-    padding: 0 1.5rem;
-    position: sticky;
-    top: 0;
-    z-index: 101;
   }
 
   .header-right .btn-upgrade {
@@ -377,6 +367,14 @@
   .stats-row {
     grid-template-columns: 1fr;
     gap: 1rem;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-group.form-full {
+    grid-column: span 1;
   }
 }
 

@@ -27,7 +27,9 @@ import {
   FiLogOut,
   FiCheckSquare,
   FiStar,
-  FiClock
+  FiClock,
+  FiMenu,
+  FiX
 } from 'react-icons/fi';
 import './AdminDashboard.css';
 
@@ -36,6 +38,7 @@ const AdminDashboard = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Mock Data
   const stats = [
@@ -527,8 +530,9 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="admin-dashboard">
-      <aside className="admin-sidebar">
+    <div className={`admin-dashboard ${isSidebarOpen ? 'sidebar-open' : ''}`}>
+      <div className="sidebar-overlay" onClick={() => setIsSidebarOpen(false)}></div>
+      <aside className={`admin-sidebar ${isSidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-brand">
           <div className="brand-logo">U</div>
           <span className="text-gradient" style={{ fontWeight: 800, fontSize: '1.25rem' }}>UniSubmit Admin</span>
@@ -539,7 +543,10 @@ const AdminDashboard = () => {
             <button
               key={item.name}
               className={`nav-item ${activeTab === item.name ? 'active' : ''}`}
-              onClick={() => setActiveTab(item.name)}
+              onClick={() => {
+                setActiveTab(item.name);
+                setIsSidebarOpen(false);
+              }}
             >
               <span className="nav-icon">{item.icon}</span>
               <span className="nav-label">{item.name}</span>
@@ -563,6 +570,9 @@ const AdminDashboard = () => {
 
       <header className="admin-header">
         <div className="header-left">
+          <button className="mobile-menu-btn" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
+            {isSidebarOpen ? <FiX /> : <FiMenu />}
+          </button>
           <h1>{activeTab}</h1>
         </div>
         <div className="header-right">

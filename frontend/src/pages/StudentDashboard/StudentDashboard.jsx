@@ -3,12 +3,13 @@ import { motion } from 'framer-motion';
 import {
   FiGrid, FiBook, FiClock, FiCheckSquare, FiTrendingUp,
   FiBell, FiCalendar, FiFileText, FiMessageSquare,
-  FiChevronRight, FiAlertCircle, FiPlus, FiLogOut, FiStar
+  FiChevronRight, FiAlertCircle, FiPlus, FiLogOut, FiStar, FiMenu, FiX
 } from 'react-icons/fi';
 import './StudentDashboard.css';
 
 const StudentDashboard = () => {
   const [activeTab, setActiveTab] = useState('Project Overview');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Mock Data
   const stats = [
@@ -249,33 +250,34 @@ const StudentDashboard = () => {
   };
 
   return (
-    <div className="student-dashboard-wrapper">
-      <aside className="student-sidebar">
+    <div className={`student-dashboard-wrapper ${isSidebarOpen ? 'sidebar-open' : ''}`}>
+      <div className="sidebar-overlay" onClick={() => setIsSidebarOpen(false)}></div>
+      <aside className={`student-sidebar ${isSidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-brand">
           <div className="brand-icon">U</div>
           <span className="text-gradient" style={{ fontWeight: 800 }}>UniSubmit</span>
         </div>
 
         <nav className="sidebar-nav">
-          <div className={`nav-link ${activeTab === 'Project Overview' ? 'active' : ''}`} onClick={() => setActiveTab('Project Overview')}>
+          <div className={`nav-link ${activeTab === 'Project Overview' ? 'active' : ''}`} onClick={() => { setActiveTab('Project Overview'); setIsSidebarOpen(false); }}>
             <FiGrid /> <span className="nav-label">Project Overview</span>
           </div>
-          <div className={`nav-link ${activeTab === 'Acceptance & Task Center' ? 'active' : ''}`} onClick={() => setActiveTab('Acceptance & Task Center')}>
+          <div className={`nav-link ${activeTab === 'Acceptance & Task Center' ? 'active' : ''}`} onClick={() => { setActiveTab('Acceptance & Task Center'); setIsSidebarOpen(false); }}>
             <FiCheckSquare /> <span className="nav-label">Acceptance Hub</span>
           </div>
-          <div className={`nav-link ${activeTab === 'Progress Tracker' ? 'active' : ''}`} onClick={() => setActiveTab('Progress Tracker')}>
+          <div className={`nav-link ${activeTab === 'Progress Tracker' ? 'active' : ''}`} onClick={() => { setActiveTab('Progress Tracker'); setIsSidebarOpen(false); }}>
             <FiTrendingUp /> <span className="nav-label">Progress Tracker</span>
           </div>
-          <div className={`nav-link ${activeTab === 'Milestones & Deadlines' ? 'active' : ''}`} onClick={() => setActiveTab('Milestones & Deadlines')}>
+          <div className={`nav-link ${activeTab === 'Milestones & Deadlines' ? 'active' : ''}`} onClick={() => { setActiveTab('Milestones & Deadlines'); setIsSidebarOpen(false); }}>
             <FiCalendar /> <span className="nav-label">Milestones</span>
           </div>
-          <div className={`nav-link ${activeTab === 'Submission Upload Center' ? 'active' : ''}`} onClick={() => setActiveTab('Submission Upload Center')}>
+          <div className={`nav-link ${activeTab === 'Submission Upload Center' ? 'active' : ''}`} onClick={() => { setActiveTab('Submission Upload Center'); setIsSidebarOpen(false); }}>
             <FiPlus /> <span className="nav-label">Submission Upload</span>
           </div>
-          <div className={`nav-link ${activeTab === 'Revision Requests' ? 'active' : ''}`} onClick={() => setActiveTab('Revision Requests')}>
+          <div className={`nav-link ${activeTab === 'Revision Requests' ? 'active' : ''}`} onClick={() => { setActiveTab('Revision Requests'); setIsSidebarOpen(false); }}>
             <FiClock /> <span className="nav-label">Revision Requests</span>
           </div>
-          <div className={`nav-link ${activeTab === 'Grade & Feedback Center' ? 'active' : ''}`} onClick={() => setActiveTab('Grade & Feedback Center')}>
+          <div className={`nav-link ${activeTab === 'Grade & Feedback Center' ? 'active' : ''}`} onClick={() => { setActiveTab('Grade & Feedback Center'); setIsSidebarOpen(false); }}>
             <FiStar /> <span className="nav-label">Grade Center</span>
           </div>
         </nav>
@@ -296,6 +298,9 @@ const StudentDashboard = () => {
 
       <header className="student-header">
         <div className="header-left">
+          <button className="mobile-menu-btn" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
+            {isSidebarOpen ? <FiX /> : <FiMenu />}
+          </button>
           <h1>{activeTab}</h1>
         </div>
         <div className="header-right">

@@ -28,13 +28,20 @@
   /* Spacing */
   --spacing-xs: 0.5rem;
   --spacing-sm: 1rem;
-  --spacing-md: 2rem;
-  --spacing-lg: 4rem;
-  --spacing-xl: 8rem;
+  --spacing-md: 1.5rem;
+  --spacing-lg: 2.5rem;
+  --spacing-xl: 4rem;
 
-  /* Transitions */
-  --transition-fast: 0.2s ease;
-  --transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Touch Targets */
+  --touch-target: 44px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --spacing-md: 2rem;
+    --spacing-lg: 4rem;
+    --spacing-xl: 8rem;
+  }
 }
 
 * {
@@ -50,6 +57,13 @@ body {
   line-height: 1.6;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  font-size: 14px; /* Base for mobile */
+}
+
+@media (min-width: 768px) {
+  body {
+    font-size: 16px;
+  }
 }
 
 /* Home Background Image Utility - Blended for White Theme */
@@ -210,9 +224,16 @@ ul {
 }
 
 .section-title {
-  font-size: 2.5rem;
+  font-size: 1.75rem;
   margin-bottom: var(--spacing-sm);
   text-align: center;
+  font-weight: 700;
+}
+
+@media (min-width: 768px) {
+  .section-title {
+    font-size: 2.5rem;
+  }
 }
 
 .section-subtitle {

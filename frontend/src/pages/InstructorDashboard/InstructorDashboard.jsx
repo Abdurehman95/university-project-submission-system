@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   FiGrid, FiBook, FiPlus, FiUsers, FiFileText,
   FiClock, FiDownload, FiCheck, FiX, FiPaperclip,
-  FiTrendingUp, FiLogOut, FiSend, FiStar, FiFilter, FiBell
+  FiTrendingUp, FiLogOut, FiSend, FiStar, FiFilter, FiBell, FiMenu, FiX
 } from 'react-icons/fi';
 import './InstructorDashboard.css';
 
@@ -12,6 +12,7 @@ const InstructorDashboard = () => {
   const [isEvaluationOpen, setIsEvaluationOpen] = useState(false);
   const [selectedSubmission, setSelectedSubmission] = useState(null);
   const [gradingData, setGradingData] = useState({ score: '', comments: '', rubricRating: 0 });
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Mock Data
   const stats = [
@@ -246,33 +247,34 @@ const InstructorDashboard = () => {
   };
 
   return (
-    <div className="instructor-dashboard-wrapper">
-      <aside className="instructor-sidebar">
+    <div className={`instructor-dashboard-wrapper ${isSidebarOpen ? 'sidebar-open' : ''}`}>
+      <div className="sidebar-overlay" onClick={() => setIsSidebarOpen(false)}></div>
+      <aside className={`instructor-sidebar ${isSidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-brand">
           <div className="brand-icon">U</div>
           <span className="text-gradient" style={{ fontWeight: 800 }}>UniSubmit</span>
         </div>
 
         <nav className="sidebar-nav">
-          <div className={`nav-link ${activeSection === 'Project' ? 'active' : ''}`} onClick={() => setActiveSection('Project')}>
+          <div className={`nav-link ${activeSection === 'Project' ? 'active' : ''}`} onClick={() => { setActiveSection('Project'); setIsSidebarOpen(false); }}>
             <FiPlus /> <span className="nav-label">Project</span>
           </div>
-          <div className={`nav-link ${activeSection === 'Assignment' ? 'active' : ''}`} onClick={() => setActiveSection('Assignment')}>
+          <div className={`nav-link ${activeSection === 'Assignment' ? 'active' : ''}`} onClick={() => { setActiveSection('Assignment'); setIsSidebarOpen(false); }}>
             <FiBook /> <span className="nav-label">Assignment</span>
           </div>
-          <div className={`nav-link ${activeSection === 'Student progress' ? 'active' : ''}`} onClick={() => setActiveSection('Student progress')}>
+          <div className={`nav-link ${activeSection === 'Student progress' ? 'active' : ''}`} onClick={() => { setActiveSection('Student progress'); setIsSidebarOpen(false); }}>
             <FiTrendingUp /> <span className="nav-label">Student progress</span>
           </div>
-          <div className={`nav-link ${activeSection === 'Submission' ? 'active' : ''}`} onClick={() => setActiveSection('Submission')}>
+          <div className={`nav-link ${activeSection === 'Submission' ? 'active' : ''}`} onClick={() => { setActiveSection('Submission'); setIsSidebarOpen(false); }}>
             <FiFileText /> <span className="nav-label">Submission</span>
           </div>
-          <div className={`nav-link ${activeSection === 'Revision' ? 'active' : ''}`} onClick={() => setActiveSection('Revision')}>
+          <div className={`nav-link ${activeSection === 'Revision' ? 'active' : ''}`} onClick={() => { setActiveSection('Revision'); setIsSidebarOpen(false); }}>
             <FiClock /> <span className="nav-label">Revision</span>
           </div>
-          <div className={`nav-link ${activeSection === 'Grading' ? 'active' : ''}`} onClick={() => setActiveSection('Grading')}>
+          <div className={`nav-link ${activeSection === 'Grading' ? 'active' : ''}`} onClick={() => { setActiveSection('Grading'); setIsSidebarOpen(false); }}>
             <FiStar /> <span className="nav-label">Grading</span>
           </div>
-          <div className={`nav-link ${activeSection === 'Communication' ? 'active' : ''}`} onClick={() => setActiveSection('Communication')}>
+          <div className={`nav-link ${activeSection === 'Communication' ? 'active' : ''}`} onClick={() => { setActiveSection('Communication'); setIsSidebarOpen(false); }}>
             <FiSend /> <span className="nav-label">Communication</span>
           </div>
         </nav>
@@ -293,6 +295,9 @@ const InstructorDashboard = () => {
 
       <header className="instructor-header">
         <div className="header-left">
+          <button className="mobile-menu-btn" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
+            {isSidebarOpen ? <FiX /> : <FiMenu />}
+          </button>
           <h1>{activeSection}</h1>
         </div>
         <div className="header-right">
