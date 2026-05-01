@@ -8,7 +8,7 @@ import {
 import './InstructorDashboard.css';
 
 const InstructorDashboard = () => {
-  const [activeSection, setActiveSection] = useState('Dashboard');
+  const [activeSection, setActiveSection] = useState('Project');
   const [isEvaluationOpen, setIsEvaluationOpen] = useState(false);
   const [selectedSubmission, setSelectedSubmission] = useState(null);
   const [gradingData, setGradingData] = useState({ score: '', comments: '', rubricRating: 0 });
@@ -53,132 +53,110 @@ const InstructorDashboard = () => {
 
   const renderSection = () => {
     switch (activeSection) {
-      case 'Dashboard':
-        return (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="dashboard-view">
-            <div className="stats-row">
-              {stats.map((stat, i) => (
-                <div key={i} className="glass-card stat-item">
-                  <div className="stat-icon-wrapper" style={{ backgroundColor: `${stat.color}15`, color: stat.color }}>
-                    {stat.icon}
-                  </div>
-                  <div>
-                    <h3>{stat.value}</h3>
-                    <p>{stat.label}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="section-grid">
-              <div className="glass-card">
-                <div className="section-header-mini">
-                  <h2>Recent Activity</h2>
-                  <button className="text-link">Clear</button>
-                </div>
-                <div className="activity-list">
-                  <div className="activity-item">
-                    <FiFileText />
-                    <p><strong>Jane Smith</strong> submitted "Lab 4: React Testing"</p>
-                    <span>12m ago</span>
-                  </div>
-                  <div className="activity-item">
-                    <FiUsers />
-                    <p><strong>New Enrollment:</strong> David Lee joined CS302</p>
-                    <span>1h ago</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        );
-
-      case 'Courses':
-        return (
-          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="courses-view">
-            <div className="section-header-row">
-              <h2>Course Management</h2>
-              <button className="btn btn-success"><FiPlus /> Add Course</button>
-            </div>
-            <div className="courses-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem', marginTop: '2rem' }}>
-              {courses.map(course => (
-                <div key={course.id} className="glass-card course-card">
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
-                    <span className="badge-code">{course.code}</span>
-                    <FiCheck color="#10b981" />
-                  </div>
-                  <h3>{course.name}</h3>
-                  <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.9rem', margin: '0.5rem 0' }}>{course.term}</p>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1.5rem', alignItems: 'center' }}>
-                    <span><FiUsers /> {course.students} Students</span>
-                    <button className="btn btn-outline" style={{ padding: '0.5rem 1rem' }}>Manage</button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        );
-
-      case 'Assignments':
+      case 'Project':
         return (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="assignments-view">
             <div className="creation-panel glass-card">
-              <h2>Create New Assignment</h2>
-              <p>Define project requirements and set deadlines for your students.</p>
+              <h2>Project Creation Center</h2>
+              <p>Define new project templates and global requirements.</p>
 
               <form className="form-grid">
                 <div className="form-group form-full">
-                  <label>Assignment Title</label>
-                  <input type="text" placeholder="e.g. Final Research Paper" />
+                  <label>Project Title</label>
+                  <input type="text" placeholder="e.g. Distributed Systems Implementation" />
                 </div>
                 <div className="form-group">
-                  <label>Course</label>
+                  <label>Category</label>
                   <select>
-                    {courses.map(c => <option key={c.id}>{c.name} ({c.code})</option>)}
+                    <option>Capstone Project</option>
+                    <option>Research Paper</option>
+                    <option>Lab Series</option>
                   </select>
                 </div>
                 <div className="form-group">
-                  <label>Deadline</label>
+                  <label>Default Deadline</label>
                   <input type="datetime-local" />
                 </div>
                 <div className="form-group form-full">
-                  <label>Description</label>
-                  <textarea rows="4" placeholder="Detailed instructions for the students..."></textarea>
-                </div>
-                <div className="form-group form-full">
-                  <label>Attachments & Rubric</label>
-                  <div className="file-upload-zone">
-                    <FiPaperclip size={24} color="var(--color-accent-primary)" />
-                    <p>Drop files here or click to upload</p>
-                    <span>PDF, DOCX, ZIP (Max 50MB)</span>
-                  </div>
+                  <label>Project Scope & Objectives</label>
+                  <textarea rows="4" placeholder="Outline the learning objectives..."></textarea>
                 </div>
                 <div className="form-actions" style={{ gridColumn: 'span 2', display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1rem' }}>
-                  <button type="button" className="btn btn-outline">Save Draft</button>
-                  <button type="submit" className="btn btn-success">Publish Assignment</button>
+                  <button type="button" className="btn btn-outline">Save Template</button>
+                  <button type="submit" className="btn btn-success">Initialize Project</button>
                 </div>
               </form>
             </div>
           </motion.div>
         );
 
-      case 'Submissions':
+      case 'Assignment':
+        return (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="courses-view">
+            <div className="section-header-row">
+              <h2>Active Assignments</h2>
+              <button className="btn btn-success"><FiPlus /> New Assignment</button>
+            </div>
+            <div className="courses-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem', marginTop: '2rem' }}>
+              {courses.map(course => (
+                <div key={course.id} className="glass-card course-card kpi-card">
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                    <span className="badge-code">{course.code}</span>
+                    <span className="status-badge status-active">Active</span>
+                  </div>
+                  <h3>{course.name}</h3>
+                  <div className="progress-container">
+                    <div className="progress-bar" style={{ width: '65%', background: 'var(--color-accent-primary)' }}></div>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem', alignItems: 'center', fontSize: '0.85rem' }}>
+                    <span>65% Submissions</span>
+                    <button className="text-link">Edit</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        );
+
+      case 'Student progress':
         return (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="submissions-view">
             <div className="section-header-row">
-              <h2>Submission Review Queue</h2>
-              <div className="toolbar-actions">
-                <button className="btn btn-outline"><FiFilter /> Filter</button>
-                <button className="btn btn-outline"><FiDownload /> Export CSV</button>
-              </div>
+              <h2>Student & Group Progress Tracking</h2>
+            </div>
+            <div className="glass-card" style={{ padding: '2rem' }}>
+              {[
+                { name: 'Group Alpha', leader: 'John Doe', progress: 85, status: 'On Track' },
+                { name: 'Group Beta', leader: 'Jane Smith', progress: 40, status: 'Behind' },
+                { name: 'Group Gamma', leader: 'Alice Johnson', progress: 100, status: 'Completed' }
+              ].map((group, idx) => (
+                <div key={idx} style={{ marginBottom: '2rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                    <strong>{group.name}</strong>
+                    <span className={`status-badge ${group.status === 'On Track' ? 'status-active' : group.status === 'Behind' ? 'status-overdue' : 'status-completed'}`}>{group.status}</span>
+                  </div>
+                  <div className="progress-container">
+                    <div className="progress-bar" style={{ width: `${group.progress}%`, background: group.status === 'Behind' ? '#ef4444' : 'var(--color-success)' }}></div>
+                  </div>
+                  <span style={{ fontSize: '0.85rem', opacity: 0.6 }}>Leader: {group.leader} • {group.progress}% Completion</span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        );
+
+      case 'Submission':
+        return (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="submissions-view">
+            <div className="section-header-row">
+              <h2>Submission Review Panel</h2>
             </div>
             <div className="glass-card data-table-container">
               <table className="data-table">
                 <thead>
                   <tr>
-                    <th>Student Name</th>
+                    <th>Student</th>
                     <th>Assignment</th>
-                    <th>Date Submitted</th>
                     <th>Status</th>
                     <th>Actions</th>
                   </tr>
@@ -188,22 +166,76 @@ const InstructorDashboard = () => {
                     <tr key={sub.id}>
                       <td>{sub.student}</td>
                       <td>{sub.assignment}</td>
-                      <td>{sub.date}</td>
+                      <td><span className="status-badge status-pending">{sub.status}</span></td>
                       <td>
-                        <span className={`status-indicator ${sub.status === 'Graded' ? 'status-graded' : 'status-pending'}`}>
-                          {sub.status}
-                        </span>
-                      </td>
-                      <td>
-                        <div style={{ display: 'flex', gap: '0.5rem' }}>
-                          <button className="btn-icon" onClick={() => handleOpenEvaluation(sub)}><FiStar title="Grade" /></button>
-                          <button className="btn-icon"><FiDownload title="Download" /></button>
-                        </div>
+                        <button className="btn btn-outline btn-sm" onClick={() => handleOpenEvaluation(sub)}>Review</button>
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
+            </div>
+          </motion.div>
+        );
+
+      case 'Revision':
+        return (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="tab-content">
+            <div className="glass-panel" style={{ padding: '2rem' }}>
+              <h2>Active Revision Requests</h2>
+              <div style={{ marginTop: '2rem' }}>
+                <div className="glass-panel" style={{ padding: '1.5rem', borderLeft: '4px solid #f59e0b' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <h4>Refactoring Request: John Doe</h4>
+                    <span className="status-badge status-pending">Awaiting Action</span>
+                  </div>
+                  <p style={{ fontSize: '0.9rem', marginTop: '1rem' }}>Requested additional feedback on database normalization.</p>
+                  <div style={{ marginTop: '1rem', display: 'flex', gap: '1rem' }}>
+                    <button className="btn btn-success btn-sm">Accept & Re-open</button>
+                    <button className="btn btn-outline btn-sm">Clarify</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        );
+
+      case 'Grading':
+        return (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="tab-content">
+            <div className="glass-panel" style={{ padding: '2rem' }}>
+              <h2>Grading & Rubric Tools</h2>
+              <div className="courses-grid" style={{ marginTop: '2rem' }}>
+                <div className="glass-panel kpi-card" style={{ padding: '1.5rem' }}>
+                  <FiStar size={24} color="var(--color-accent-primary)" />
+                  <h3 style={{ marginTop: '1rem' }}>Standard Rubric v2</h3>
+                  <p style={{ fontSize: '0.85rem', opacity: 0.6 }}>Used in 12 courses</p>
+                  <button className="text-link" style={{ marginTop: '1.5rem' }}>Edit Rubric</button>
+                </div>
+                <div className="glass-panel kpi-card" style={{ padding: '1.5rem' }}>
+                  <FiPlus size={24} color="var(--color-success)" />
+                  <h3 style={{ marginTop: '1rem' }}>Create New Rubric</h3>
+                  <p style={{ fontSize: '0.85rem', opacity: 0.6 }}>Custom criteria sets</p>
+                  <button className="text-link" style={{ marginTop: '1.5rem' }}>Initialize</button>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        );
+
+      case 'Communication':
+        return (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="tab-content">
+            <div className="glass-panel" style={{ padding: '2rem' }}>
+              <h2>Communication Center</h2>
+              <div className="activity-list" style={{ marginTop: '2rem' }}>
+                <div className="activity-item glass-panel" style={{ padding: '1rem', marginBottom: '1rem' }}>
+                  <FiSend />
+                  <p><strong>Message to CS302:</strong> Reminder about tonight's deadline.</p>
+                  <span>Just now</span>
+                </div>
+                <button className="btn btn-primary" style={{ width: '100%' }}>Send New Broadcast</button>
+              </div>
             </div>
           </motion.div>
         );
@@ -222,17 +254,26 @@ const InstructorDashboard = () => {
         </div>
 
         <nav className="sidebar-nav">
-          <div className={`nav-link ${activeSection === 'Dashboard' ? 'active' : ''}`} onClick={() => setActiveSection('Dashboard')}>
-            <FiGrid /> <span className="nav-label">Dashboard</span>
+          <div className={`nav-link ${activeSection === 'Project' ? 'active' : ''}`} onClick={() => setActiveSection('Project')}>
+            <FiPlus /> <span className="nav-label">Project</span>
           </div>
-          <div className={`nav-link ${activeSection === 'Courses' ? 'active' : ''}`} onClick={() => setActiveSection('Courses')}>
-            <FiBook /> <span className="nav-label">Courses</span>
+          <div className={`nav-link ${activeSection === 'Assignment' ? 'active' : ''}`} onClick={() => setActiveSection('Assignment')}>
+            <FiBook /> <span className="nav-label">Assignment</span>
           </div>
-          <div className={`nav-link ${activeSection === 'Assignments' ? 'active' : ''}`} onClick={() => setActiveSection('Assignments')}>
-            <FiPlus /> <span className="nav-label">Assignments</span>
+          <div className={`nav-link ${activeSection === 'Student progress' ? 'active' : ''}`} onClick={() => setActiveSection('Student progress')}>
+            <FiTrendingUp /> <span className="nav-label">Student progress</span>
           </div>
-          <div className={`nav-link ${activeSection === 'Submissions' ? 'active' : ''}`} onClick={() => setActiveSection('Submissions')}>
-            <FiFileText /> <span className="nav-label">Submissions</span>
+          <div className={`nav-link ${activeSection === 'Submission' ? 'active' : ''}`} onClick={() => setActiveSection('Submission')}>
+            <FiFileText /> <span className="nav-label">Submission</span>
+          </div>
+          <div className={`nav-link ${activeSection === 'Revision' ? 'active' : ''}`} onClick={() => setActiveSection('Revision')}>
+            <FiClock /> <span className="nav-label">Revision</span>
+          </div>
+          <div className={`nav-link ${activeSection === 'Grading' ? 'active' : ''}`} onClick={() => setActiveSection('Grading')}>
+            <FiStar /> <span className="nav-label">Grading</span>
+          </div>
+          <div className={`nav-link ${activeSection === 'Communication' ? 'active' : ''}`} onClick={() => setActiveSection('Communication')}>
+            <FiSend /> <span className="nav-label">Communication</span>
           </div>
         </nav>
 

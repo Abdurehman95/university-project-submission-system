@@ -1,12 +1,33 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  FiGrid, FiUsers, FiBook, FiUserPlus, FiFileText,
-  FiBarChart2, FiSettings, FiActivity, FiUser,
-  FiPlus, FiSearch, FiFilter, FiDownload, FiEdit2,
-  FiTrash2, FiToggleLeft, FiKey, FiMoreVertical,
-  FiBell, FiCalendar, FiShield, FiDatabase, FiAlertTriangle, FiLogOut,
-  FiCheckSquare, FiStar
+  FiGrid,
+  FiUsers,
+  FiBook,
+  FiUserPlus,
+  FiFileText,
+  FiBarChart2,
+  FiSettings,
+  FiActivity,
+  FiUser,
+  FiPlus,
+  FiSearch,
+  FiFilter,
+  FiDownload,
+  FiEdit2,
+  FiTrash2,
+  FiToggleLeft,
+  FiKey,
+  FiMoreVertical,
+  FiBell,
+  FiCalendar,
+  FiShield,
+  FiDatabase,
+  FiAlertTriangle,
+  FiLogOut,
+  FiCheckSquare,
+  FiStar,
+  FiClock
 } from 'react-icons/fi';
 import './AdminDashboard.css';
 
@@ -26,12 +47,12 @@ const AdminDashboard = () => {
 
   const menuItems = [
     { name: 'Overview', icon: <FiGrid /> },
-    { name: 'User Management', icon: <FiUsers /> },
-    { name: 'Courses & Depts', icon: <FiBook /> },
-    { name: 'Analytics & Reports', icon: <FiBarChart2 /> },
-    { name: 'System Logs', icon: <FiActivity /> },
-    { name: 'Access Control', icon: <FiShield /> },
-    { name: 'Settings', icon: <FiSettings /> },
+    { name: 'Department', icon: <FiBarChart2 /> },
+    { name: 'Supervision', icon: <FiUsers /> },
+    { name: 'Deadline', icon: <FiClock /> },
+    { name: 'Security logs', icon: <FiShield /> },
+    { name: 'Reports', icon: <FiFileText /> },
+    { name: 'Notifications', icon: <FiBell /> },
   ];
 
   const users = [
@@ -72,7 +93,7 @@ const AdminDashboard = () => {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="tab-content">
             <div className="stats-grid">
               {stats.map((stat, i) => (
-                <div key={i} className="stat-card glass-panel">
+                <div key={i} className="stat-card glass-panel kpi-card">
                   <div className="stat-header">
                     <div className="stat-icon" style={{ color: stat.color, backgroundColor: `${stat.color}15` }}>
                       {stat.icon}
@@ -124,33 +145,33 @@ const AdminDashboard = () => {
           </motion.div>
         );
 
-      case 'User Management':
+      case 'Supervision':
         return (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="tab-content">
             <div className="content-toolbar" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2rem' }}>
-              <div className="search-box" style={{ background: 'var(--color-bg-secondary)', padding: '0.75rem 1.5rem', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '1rem', width: '400px', border: '1px solid var(--color-glass-border)' }}>
+              <div className="search-box glass-panel" style={{ padding: '0.75rem 1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', width: '400px' }}>
                 <FiSearch />
-                <input type="text" placeholder="Search by name, email or role..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} style={{ border: 'none', background: 'transparent', outline: 'none', width: '100%' }} />
+                <input type="text" placeholder="Search instructors..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} style={{ border: 'none', background: 'transparent', outline: 'none', width: '100%' }} />
               </div>
               <div style={{ display: 'flex', gap: '1rem' }}>
                 <button className="btn btn-outline"><FiFilter /> Filters</button>
-                <button className="btn btn-success"><FiPlus /> Add New User</button>
+                <button className="btn btn-success"><FiPlus /> Add Instructor</button>
               </div>
             </div>
 
-            <div className="glass-panel" style={{ overflow: 'hidden', borderRadius: '20px' }}>
+            <div className="glass-panel" style={{ overflow: 'auto', borderRadius: '20px' }}>
               <table className="admin-table">
                 <thead>
                   <tr>
-                    <th>User Identification</th>
-                    <th>System Role</th>
-                    <th>Account Status</th>
-                    <th>Last Active</th>
-                    <th>Permissions</th>
+                    <th>Instructor</th>
+                    <th>Dept</th>
+                    <th>Active Projects</th>
+                    <th>Status</th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {users.map(user => (
+                  {users.filter(u => u.role === 'Instructor').map(user => (
                     <tr key={user.id}>
                       <td>
                         <div className="user-info-cell">
@@ -161,19 +182,18 @@ const AdminDashboard = () => {
                           </div>
                         </div>
                       </td>
-                      <td><span className={`role-badge ${user.role.toLowerCase()}`}>{user.role}</span></td>
+                      <td>Engineering</td>
+                      <td><span className="status-badge status-completed">5 Projects</span></td>
                       <td>
                         <div style={{ display: 'flex', alignItems: 'center' }}>
                           <span className={`status-dot ${user.status.toLowerCase()}`}></span>
                           {user.status}
                         </div>
                       </td>
-                      <td style={{ fontSize: '0.9rem', opacity: 0.7 }}>Jan 12, 2023</td>
                       <td>
                         <div style={{ display: 'flex', gap: '0.5rem' }}>
-                          <button className="btn-icon"><FiEdit2 /></button>
-                          <button className="btn-icon"><FiKey /></button>
-                          <button className="btn-icon" style={{ color: '#ef4444' }}><FiTrash2 /></button>
+                          <button className="btn-icon"><FiActivity /></button>
+                          <button className="btn-icon" style={{ color: '#ef4444' }}><FiAlertTriangle /></button>
                         </div>
                       </td>
                     </tr>
@@ -184,29 +204,32 @@ const AdminDashboard = () => {
           </motion.div>
         );
 
-      case 'Courses & Depts':
+      case 'Department':
         return (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="tab-content">
             <div className="content-toolbar" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2rem' }}>
-              <h2>Departmental Oversight</h2>
-              <button className="btn btn-success"><FiPlus /> Create Department</button>
+              <h2>Departmental & Project Insights</h2>
+              <button className="btn btn-success"><FiPlus /> Export Dataset</button>
             </div>
             <div className="courses-grid">
               {[
-                { name: 'Computer Science', head: 'Dr. Alan Mathison', courses: 24, faculty: 15 },
-                { name: 'Electrical Engineering', head: 'Prof. Nikola Tesla', courses: 18, faculty: 12 },
-                { name: 'Mathematics', head: 'Dr. Katherine Johnson', courses: 12, faculty: 8 }
+                { name: 'Computer Science', head: 'Dr. Alan Mathison', projects: 85, completion: 92 },
+                { name: 'Electrical Engineering', head: 'Prof. Nikola Tesla', projects: 64, completion: 88 },
+                { name: 'Mathematics', head: 'Dr. Katherine Johnson', projects: 42, completion: 95 }
               ].map((dept, i) => (
-                <div key={i} className="glass-panel" style={{ padding: '2rem' }}>
+                <div key={i} className="glass-panel kpi-card" style={{ padding: '2rem' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
-                    <FiBook size={32} color="var(--color-accent-primary)" />
+                    <FiBarChart2 size={32} color="var(--color-accent-primary)" />
                     <FiMoreVertical cursor="pointer" />
                   </div>
                   <h3>{dept.name}</h3>
-                  <p style={{ margin: '1rem 0', color: 'var(--color-text-secondary)' }}>Department Head: {dept.head}</p>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '1.5rem', borderTop: '1px solid var(--color-glass-border)' }}>
-                    <span>{dept.courses} Courses</span>
-                    <span>{dept.faculty} Faculty</span>
+                  <p style={{ margin: '1rem 0', color: 'var(--color-text-secondary)' }}>Projects: {dept.projects}</p>
+                  <div className="progress-container">
+                    <div className="progress-bar" style={{ width: `${dept.completion}%`, background: 'var(--color-accent-primary)' }}></div>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}>
+                    <span>Completion Rate</span>
+                    <strong>{dept.completion}%</strong>
                   </div>
                 </div>
               ))}
@@ -214,7 +237,7 @@ const AdminDashboard = () => {
           </motion.div>
         );
 
-      case 'Analytics & Reports':
+      case 'Reports':
         return (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="tab-content reports-view">
             <div className="reports-filters glass-panel">
@@ -417,12 +440,88 @@ const AdminDashboard = () => {
           </motion.div>
         );
 
-      default:
+      case 'Security logs':
         return (
-          <div className="glass-panel" style={{ padding: '4rem', textAlign: 'center' }}>
-            <h2>Module Under Development</h2>
-            <p style={{ marginTop: '1rem', opacity: 0.6 }}>The {activeTab} section is being integrated with high-security audit trails.</p>
-          </div>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="tab-content">
+            <section className="glass-panel content-section" style={{ padding: '2rem' }}>
+              <div className="section-header" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
+                <h2>System Security Audit Trail</h2>
+                <button className="btn btn-outline btn-sm">Export Logs</button>
+              </div>
+              <div className="log-list">
+                {logs.map(log => (
+                  <div key={log.id} className="activity-item" style={{ display: 'flex', justifyContent: 'space-between', padding: '1rem 0', borderBottom: '1px solid var(--color-glass-border)' }}>
+                    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                      <FiShield color={log.level === 'Warning' ? '#f59e0b' : '#10b981'} />
+                      <div>
+                        <p style={{ fontWeight: 600 }}>{log.action}</p>
+                        <span style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)' }}>{log.user} • {log.time}</span>
+                      </div>
+                    </div>
+                    <span className={`status-badge ${log.level === 'Warning' ? 'status-pending' : 'status-active'}`}>{log.level}</span>
+                  </div>
+                ))}
+              </div>
+            </section>
+          </motion.div>
+        );
+
+      case 'Deadline':
+        return (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="tab-content">
+            <div className="glass-panel" style={{ padding: '2rem' }}>
+              <h2>Global Deadline Monitoring</h2>
+              <div style={{ marginTop: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                {[
+                  { title: 'Midterm Project Submissions', dept: 'Computer Science', rate: 78, color: '#ff781f' },
+                  { title: 'Final Thesis Drafts', dept: 'Mathematics', rate: 92, color: '#10b981' },
+                  { title: 'Lab Reports Unit 4', dept: 'Engineering', rate: 45, color: '#ef4444' }
+                ].map((item, idx) => (
+                  <div key={idx} className="glass-panel" style={{ padding: '1.5rem', background: 'rgba(0,0,0,0.02)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                      <strong>{item.title}</strong>
+                      <span className="countdown-timer"><FiClock /> 02d : 14h : 45m</span>
+                    </div>
+                    <p style={{ fontSize: '0.85rem', opacity: 0.6, marginBottom: '1rem' }}>{item.dept}</p>
+                    <div className="progress-container">
+                      <div className="progress-bar" style={{ width: `${item.rate}%`, background: item.color }}></div>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}>
+                      <span>Compliance Rate</span>
+                      <strong>{item.rate}%</strong>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        );
+
+      case 'Notifications':
+        return (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="tab-content">
+            <div className="glass-panel" style={{ padding: '2rem' }}>
+              <div className="section-header" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2rem' }}>
+                <h2>System Notifications</h2>
+                <button className="btn btn-success btn-sm">Mark All Read</button>
+              </div>
+              <div className="notifications-list" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                {[
+                  { title: 'Server Maintenance', msg: 'System will be down for 2 hours on Sunday.', time: '1h ago', type: 'alert' },
+                  { title: 'New Instructor Verified', msg: 'Prof. Alan Turing has been added to CS dept.', time: '3h ago', type: 'info' },
+                  { title: 'Database Backup Success', msg: 'Weekly automated backup completed successfully.', time: '5h ago', type: 'success' }
+                ].map((n, i) => (
+                  <div key={i} className="notification-item glass-panel" style={{ padding: '1.25rem', borderLeft: `4px solid ${n.type === 'alert' ? '#ef4444' : n.type === 'success' ? '#10b981' : '#6366f1'}` }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <h4 style={{ fontWeight: 600 }}>{n.title}</h4>
+                      <span style={{ fontSize: '0.75rem', opacity: 0.5 }}>{n.time}</span>
+                    </div>
+                    <p style={{ fontSize: '0.9rem', marginTop: '0.5rem', opacity: 0.8 }}>{n.msg}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
         );
     }
   };

@@ -3,12 +3,12 @@ import { motion } from 'framer-motion';
 import {
   FiGrid, FiBook, FiClock, FiCheckSquare, FiTrendingUp,
   FiBell, FiCalendar, FiFileText, FiMessageSquare,
-  FiChevronRight, FiAlertCircle, FiPlus, FiLogOut
+  FiChevronRight, FiAlertCircle, FiPlus, FiLogOut, FiStar
 } from 'react-icons/fi';
 import './StudentDashboard.css';
 
 const StudentDashboard = () => {
-  const [activeTab, setActiveTab] = useState('Dashboard');
+  const [activeTab, setActiveTab] = useState('Project Overview');
 
   // Mock Data
   const stats = [
@@ -47,7 +47,7 @@ const StudentDashboard = () => {
 
   const renderSection = () => {
     switch (activeTab) {
-      case 'Dashboard':
+      case 'Project Overview':
         return (
           <>
             <motion.div
@@ -57,7 +57,7 @@ const StudentDashboard = () => {
               animate="visible"
             >
               {stats.map((stat, i) => (
-                <motion.div key={i} className="stat-card glass-panel" variants={itemVariants}>
+                <motion.div key={i} className="stat-card glass-panel kpi-card" variants={itemVariants}>
                   <div className="stat-icon" style={{ backgroundColor: `${stat.color}15`, color: stat.color }}>
                     {stat.icon}
                   </div>
@@ -77,8 +77,7 @@ const StudentDashboard = () => {
                   animate={{ opacity: 1, x: 0 }}
                 >
                   <div className="section-header">
-                    <h2><FiCalendar /> Track Deadlines</h2>
-                    <button className="view-all" onClick={() => setActiveTab('Assignments')}>View All</button>
+                    <h2><FiCalendar /> Active Milestones</h2>
                   </div>
                   <div className="deadline-list" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                     {deadlines.map(deadline => (
@@ -87,12 +86,7 @@ const StudentDashboard = () => {
                           <h4 style={{ fontWeight: 600 }}>{deadline.title}</h4>
                           <span style={{ fontSize: '0.85rem', opacity: 0.6 }}>{deadline.course} • {deadline.date}</span>
                         </div>
-                        <div className="deadline-status" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                          <span className="days-count" style={{ fontWeight: 600, fontSize: '0.85rem' }}>
-                            {deadline.daysLeft === 0 ? 'Overdue' : `${deadline.daysLeft} days left`}
-                          </span>
-                          <FiChevronRight />
-                        </div>
+                        <span className="countdown-timer" style={{ fontSize: '0.85rem' }}><FiClock /> {deadline.daysLeft}d left</span>
                       </div>
                     ))}
                   </div>
@@ -106,17 +100,13 @@ const StudentDashboard = () => {
                   animate={{ opacity: 1, x: 0 }}
                 >
                   <div className="section-header">
-                    <h2><FiMessageSquare /> Feedback</h2>
+                    <h2><FiTrendingUp /> Overall Progress</h2>
                   </div>
-                  <div className="feedback-preview">
-                    <div className="feedback-card" style={{ background: 'var(--color-bg-primary)', padding: '1.25rem', borderRadius: '15px' }}>
-                      <div className="feedback-meta" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.75rem', fontSize: '0.85rem' }}>
-                        <strong>Dr. Sarah Smith</strong>
-                        <span>Oct 10</span>
-                      </div>
-                      <p style={{ fontStyle: 'italic', fontSize: '0.9rem', color: 'var(--color-text-secondary)', marginBottom: '1rem' }}>"Excellent work on the normalization section. Your ER diagram is very clear..."</p>
-                      <button className="text-link" onClick={() => setActiveTab('Submissions')} style={{ background: 'none', border: 'none', color: 'var(--color-accent-primary)', fontWeight: 600, cursor: 'pointer' }}>Full Feedback</button>
+                  <div style={{ padding: '1rem' }}>
+                    <div className="progress-container" style={{ height: '12px' }}>
+                      <div className="progress-bar" style={{ width: '72%', background: 'var(--color-accent-gradient)' }}></div>
                     </div>
+                    <p style={{ textAlign: 'center', marginTop: '1rem', fontWeight: 600 }}>72% Total Completion</p>
                   </div>
                 </motion.section>
               </div>
@@ -124,59 +114,72 @@ const StudentDashboard = () => {
           </>
         );
 
-      case 'Courses':
+      case 'Acceptance & Task Center':
         return (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="courses-view">
-            <div className="section-header-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-              <h2>My Enrolled Courses</h2>
-              <button className="btn btn-outline">Browse Catalog</button>
+            <div className="section-header-row">
+              <h2>Pending Project Invitations</h2>
             </div>
-            <div className="courses-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem' }}>
-              {courses.map(course => (
-                <div key={course.id} className="glass-panel course-card" style={{ padding: '2rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
-                    <FiBook size={32} color="var(--color-accent-primary)" />
-                    <span className="badge-code" style={{ padding: '4px 12px', background: 'var(--color-accent-soft)', color: 'var(--color-accent-primary)', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 600 }}>{course.code}</span>
-                  </div>
-                  <h3 style={{ marginBottom: '0.5rem' }}>{course.name}</h3>
-                  <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>Instructor: {course.instructor}</p>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '1.5rem', borderTop: '1px solid var(--color-glass-border)' }}>
-                    <span>{course.credits} Credits</span>
-                    <button className="text-link" style={{ fontWeight: 600 }}>View Course</button>
-                  </div>
+            <div className="glass-panel" style={{ padding: '2rem', marginTop: '1rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <h3 style={{ marginBottom: '0.5rem' }}>E-Commerce Platform Re-design</h3>
+                  <p style={{ opacity: 0.6 }}>Assigned by Prof. Henderson • Oct 20</p>
                 </div>
-              ))}
-            </div>
-          </motion.div>
-        );
-
-      case 'Assignments':
-        return (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="assignments-view">
-            <div className="section-header-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-              <h2>Upcoming Assignments</h2>
-              <div style={{ display: 'flex', gap: '1rem' }}>
-                <button className="btn btn-outline">Filter</button>
-                <button className="btn btn-success">Submit Project</button>
+                <div style={{ display: 'flex', gap: '1rem' }}>
+                  <button className="btn btn-success btn-sm">Accept Project</button>
+                  <button className="btn btn-outline btn-sm">Decline</button>
+                </div>
               </div>
             </div>
-            <div className="deadline-list" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              {deadlines.map(deadline => (
-                <div key={deadline.id} className="glass-panel" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.5rem' }}>
-                  <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
-                    <div style={{ width: '45px', height: '45px', background: 'var(--color-accent-soft)', color: 'var(--color-accent-primary)', borderRadius: '12px', display: 'flex', alignItems: 'center', justify_content: 'center', fontSize: '1.25rem' }}>
-                      <FiFileText />
+          </motion.div>
+        );
+
+      case 'Progress Tracker':
+        return (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="tab-content">
+            <div className="glass-panel" style={{ padding: '2rem' }}>
+              <h2>Workflow Progress</h2>
+              <div style={{ marginTop: '2rem' }}>
+                {[
+                  { step: 'Requirements Gathering', status: 'completed' },
+                  { step: 'System Design', status: 'completed' },
+                  { step: 'Implementation', status: 'active' },
+                  { step: 'Testing & QA', status: 'pending' },
+                  { step: 'Final Submission', status: 'pending' }
+                ].map((s, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', marginBottom: '1.5rem' }}>
+                    <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: s.status === 'completed' ? 'var(--color-success)' : s.status === 'active' ? 'var(--color-accent-primary)' : 'rgba(0,0,0,0.1)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      {s.status === 'completed' ? <FiCheckSquare size={16} /> : i + 1}
                     </div>
+                    <span style={{ fontWeight: s.status === 'active' ? 700 : 400, opacity: s.status === 'pending' ? 0.4 : 1 }}>{s.step}</span>
+                    {s.status === 'active' && <span className="status-badge status-active" style={{ marginLeft: 'auto' }}>In Progress</span>}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        );
+
+      case 'Milestones & Deadlines':
+        return (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="assignments-view">
+            <div className="section-header-row">
+              <h2>Project Milestones</h2>
+            </div>
+            <div className="deadline-list" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
+              {deadlines.map(deadline => (
+                <div key={deadline.id} className="glass-panel kpi-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.5rem' }}>
+                  <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
+                    <FiCalendar size={24} color="var(--color-accent-primary)" />
                     <div>
-                      <h4 style={{ fontSize: '1.1rem', fontWeight: 600 }}>{deadline.title}</h4>
-                      <p style={{ fontSize: '0.9rem', opacity: 0.6 }}>{deadline.course} • Due {deadline.date}</p>
+                      <h4 style={{ fontWeight: 600 }}>{deadline.title}</h4>
+                      <p style={{ fontSize: '0.85rem', opacity: 0.6 }}>{deadline.course}</p>
                     </div>
                   </div>
-                  <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
-                    <span style={{ fontWeight: 600, color: deadline.status === 'overdue' ? '#ef4444' : '#f59e0b' }}>
-                      {deadline.daysLeft === 0 ? 'Overdue' : `${deadline.daysLeft} days remaining`}
-                    </span>
-                    <button className="btn btn-outline btn-sm">View Requirements</button>
+                  <div style={{ textAlign: 'right' }}>
+                    <p style={{ fontWeight: 700, color: '#ef4444' }}>Due: {deadline.date}</p>
+                    <span style={{ fontSize: '0.8rem', opacity: 0.5 }}>{deadline.daysLeft} days remaining</span>
                   </div>
                 </div>
               ))}
@@ -184,36 +187,54 @@ const StudentDashboard = () => {
           </motion.div>
         );
 
-      case 'Submissions':
+      case 'Submission Upload Center':
+        return (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="tab-content">
+            <div className="glass-panel" style={{ padding: '3rem', textAlign: 'center' }}>
+              <div style={{ width: '80px', height: '80px', background: 'var(--color-accent-soft)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 2rem' }}>
+                <FiPlus size={40} color="var(--color-accent-primary)" />
+              </div>
+              <h2>Upload Deliverables</h2>
+              <p style={{ opacity: 0.6, maxWidth: '400px', margin: '1rem auto 2rem' }}>Drag and drop your project files here. Supported: ZIP, PDF, MP4 (Max 500MB)</p>
+              <button className="btn btn-primary">Select Files</button>
+            </div>
+          </motion.div>
+        );
+
+      case 'Revision Requests':
+        return (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="tab-content">
+            <div className="glass-panel" style={{ padding: '2rem' }}>
+              <h2>My Revision Requests</h2>
+              <p style={{ opacity: 0.6, marginTop: '1rem' }}>No active revision requests at the moment.</p>
+              <button className="btn btn-outline" style={{ marginTop: '2rem' }}>New Request</button>
+            </div>
+          </motion.div>
+        );
+
+      case 'Grade & Feedback Center':
         return (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="submissions-view">
-            <div className="section-header-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-              <h2>My Submission History</h2>
-              <button className="btn btn-outline">Export Transcript</button>
+            <div className="section-header-row">
+              <h2>Grades & Detailed Feedback</h2>
             </div>
-            <div className="glass-panel" style={{ overflow: 'hidden' }}>
+            <div className="glass-panel" style={{ overflow: 'auto', marginTop: '1rem' }}>
               <table className="submission-table">
                 <thead>
                   <tr>
-                    <th>Assignment Title</th>
-                    <th>Course Code</th>
-                    <th>Date Submitted</th>
-                    <th>Evaluation Status</th>
-                    <th>Final Grade</th>
+                    <th>Project</th>
+                    <th>Date</th>
+                    <th>Grade</th>
+                    <th>Feedback</th>
                   </tr>
                 </thead>
                 <tbody>
                   {submissions.map(sub => (
                     <tr key={sub.id}>
                       <td style={{ fontWeight: 600 }}>{sub.title}</td>
-                      <td style={{ opacity: 0.7 }}>{sub.course}</td>
                       <td>{sub.date}</td>
-                      <td>
-                        <span className={`status-pill ${sub.status.toLowerCase()}`}>
-                          {sub.status}
-                        </span>
-                      </td>
                       <td style={{ fontWeight: 700, color: 'var(--color-accent-primary)' }}>{sub.score || '--'}</td>
+                      <td><button className="text-link">View Comments</button></td>
                     </tr>
                   ))}
                 </tbody>
@@ -236,17 +257,26 @@ const StudentDashboard = () => {
         </div>
 
         <nav className="sidebar-nav">
-          <div className={`nav-link ${activeTab === 'Dashboard' ? 'active' : ''}`} onClick={() => setActiveTab('Dashboard')}>
-            <FiGrid /> <span className="nav-label">Dashboard</span>
+          <div className={`nav-link ${activeTab === 'Project Overview' ? 'active' : ''}`} onClick={() => setActiveTab('Project Overview')}>
+            <FiGrid /> <span className="nav-label">Project Overview</span>
           </div>
-          <div className={`nav-link ${activeTab === 'Courses' ? 'active' : ''}`} onClick={() => setActiveTab('Courses')}>
-            <FiBook /> <span className="nav-label">Courses</span>
+          <div className={`nav-link ${activeTab === 'Acceptance & Task Center' ? 'active' : ''}`} onClick={() => setActiveTab('Acceptance & Task Center')}>
+            <FiCheckSquare /> <span className="nav-label">Acceptance Hub</span>
           </div>
-          <div className={`nav-link ${activeTab === 'Assignments' ? 'active' : ''}`} onClick={() => setActiveTab('Assignments')}>
-            <FiCalendar /> <span className="nav-label">Assignments</span>
+          <div className={`nav-link ${activeTab === 'Progress Tracker' ? 'active' : ''}`} onClick={() => setActiveTab('Progress Tracker')}>
+            <FiTrendingUp /> <span className="nav-label">Progress Tracker</span>
           </div>
-          <div className={`nav-link ${activeTab === 'Submissions' ? 'active' : ''}`} onClick={() => setActiveTab('Submissions')}>
-            <FiCheckSquare /> <span className="nav-label">Submissions</span>
+          <div className={`nav-link ${activeTab === 'Milestones & Deadlines' ? 'active' : ''}`} onClick={() => setActiveTab('Milestones & Deadlines')}>
+            <FiCalendar /> <span className="nav-label">Milestones</span>
+          </div>
+          <div className={`nav-link ${activeTab === 'Submission Upload Center' ? 'active' : ''}`} onClick={() => setActiveTab('Submission Upload Center')}>
+            <FiPlus /> <span className="nav-label">Submission Upload</span>
+          </div>
+          <div className={`nav-link ${activeTab === 'Revision Requests' ? 'active' : ''}`} onClick={() => setActiveTab('Revision Requests')}>
+            <FiClock /> <span className="nav-label">Revision Requests</span>
+          </div>
+          <div className={`nav-link ${activeTab === 'Grade & Feedback Center' ? 'active' : ''}`} onClick={() => setActiveTab('Grade & Feedback Center')}>
+            <FiStar /> <span className="nav-label">Grade Center</span>
           </div>
         </nav>
 
