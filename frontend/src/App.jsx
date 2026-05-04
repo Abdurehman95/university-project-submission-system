@@ -43,6 +43,8 @@ class ErrorBoundary extends React.Component {
   }
 }
 
+import ProtectedRoute from './components/layout/ProtectedRoute';
+
 const AppContent = () => {
   const location = useLocation();
   const hideNavPaths = ['/dashboard/student', '/dashboard/admin', '/dashboard/instructor'];
@@ -66,9 +68,31 @@ const AppContent = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/dashboard/student" element={<StudentDashboard />} />
-          <Route path="/dashboard/admin" element={<AdminDashboard />} />
-          <Route path="/dashboard/instructor" element={<InstructorDashboard />} />
+          
+          <Route 
+            path="/dashboard/student" 
+            element={
+              <ProtectedRoute role="student">
+                <StudentDashboard />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/dashboard/admin" 
+            element={
+              <ProtectedRoute role="admin">
+                <AdminDashboard />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/dashboard/instructor" 
+            element={
+              <ProtectedRoute role="instructor">
+                <InstructorDashboard />
+              </ProtectedRoute>
+            } 
+          />
         </Routes>
       </main>
       {!shouldHideNav && <Footer />}

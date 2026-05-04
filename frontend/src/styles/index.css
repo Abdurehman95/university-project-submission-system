@@ -9,12 +9,14 @@
   --color-text-primary: #1f2937;
   --color-text-secondary: #6b7280;
 
-  --color-accent-primary: #ff781f; /* Vibrant Orange */
+  --color-accent-primary: #ff781f;
+  /* Vibrant Orange */
   --color-accent-hover: #e66a1a;
   --color-accent-soft: rgba(255, 120, 31, 0.1);
   --color-accent-gradient: linear-gradient(135deg, #ff781f 0%, #ff9d5c 100%);
 
-  --color-success: #22c55e; /* Green */
+  --color-success: #22c55e;
+  /* Green */
   --color-success-hover: #16a34a;
   --color-success-soft: rgba(34, 197, 94, 0.1);
 
@@ -28,20 +30,13 @@
   /* Spacing */
   --spacing-xs: 0.5rem;
   --spacing-sm: 1rem;
-  --spacing-md: 1.5rem;
-  --spacing-lg: 2.5rem;
-  --spacing-xl: 4rem;
+  --spacing-md: 2rem;
+  --spacing-lg: 4rem;
+  --spacing-xl: 8rem;
 
-  /* Touch Targets */
-  --touch-target: 44px;
-}
-
-@media (min-width: 768px) {
-  :root {
-    --spacing-md: 2rem;
-    --spacing-lg: 4rem;
-    --spacing-xl: 8rem;
-  }
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+  --transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 * {
@@ -57,13 +52,6 @@ body {
   line-height: 1.6;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
-  font-size: 14px; /* Base for mobile */
-}
-
-@media (min-width: 768px) {
-  body {
-    font-size: 16px;
-  }
 }
 
 /* Home Background Image Utility - Blended for White Theme */
@@ -156,10 +144,25 @@ ul {
   letter-spacing: 0.5px;
 }
 
-.status-active { background: #dcfce7; color: #166534; }
-.status-pending { background: #fef9c3; color: #854d0e; }
-.status-overdue { background: #fee2e2; color: #991b1b; }
-.status-completed { background: #dbeafe; color: #1e40af; }
+.status-active {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status-pending {
+  background: #fef9c3;
+  color: #854d0e;
+}
+
+.status-overdue {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.status-completed {
+  background: #dbeafe;
+  color: #1e40af;
+}
 
 /* Countdown Timer */
 .countdown-timer {
@@ -224,16 +227,9 @@ ul {
 }
 
 .section-title {
-  font-size: 1.75rem;
+  font-size: 2.5rem;
   margin-bottom: var(--spacing-sm);
   text-align: center;
-  font-weight: 700;
-}
-
-@media (min-width: 768px) {
-  .section-title {
-    font-size: 2.5rem;
-  }
 }
 
 .section-subtitle {
@@ -243,4 +239,129 @@ ul {
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
+}
+
+/* Alerts & Notifications */
+.custom-alert {
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-weight: 500;
+  margin: 1rem 0;
+  animation: slideIn 0.3s ease-out;
+}
+
+.alert-success {
+  background: var(--color-success-soft);
+  color: var(--color-success);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.alert-error {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.alert-warning {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+/* Modal System */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.glass-modal {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 24px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  width: 100%;
+  max-width: 500px;
+  overflow: hidden;
+  animation: modalPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Input Styles */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.form-control {
+  padding: 0.85rem 1.25rem;
+  border-radius: 12px;
+  border: 1.5px solid var(--color-glass-border);
+  background: var(--color-bg-primary);
+  font-family: inherit;
+  font-size: 1rem;
+  transition: var(--transition-fast);
+  width: 100%;
+  outline: none;
+}
+
+.form-control:focus {
+  border-color: var(--color-accent-primary);
+  background: white;
+  box-shadow: 0 0 0 4px var(--color-accent-soft);
+}
+
+/* Password Toggle Utility */
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.password-toggle-icon {
+  position: absolute;
+  right: 1.25rem;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: var(--transition-fast);
+}
+
+.password-toggle-icon:hover {
+  color: var(--color-accent-primary);
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes modalPop {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
 }
