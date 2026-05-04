@@ -1,26 +1,44 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { FiMail, FiLock, FiArrowRight, FiAlertCircle } from 'react-icons/fi';
+import { FiMail, FiLock, FiArrowRight, FiAlertCircle, FiEye, FiEyeOff } from 'react-icons/fi';
 import { useNavigate, Link } from 'react-router-dom';
 import './Auth.css';
+import api from '../../services/api';
 
 const Login = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+    setLoading(true);
 
-    // Demo Mock logic
-    if (formData.email === 'student@university.edu' && formData.password === 'password123') {
-      navigate('/dashboard/student');
-    } else if (formData.email === 'instructor@university.edu' && formData.password === 'password123') {
-      navigate('/dashboard/instructor');
-    } else if (formData.email === 'admin@university.edu' && formData.password === 'password123') {
-      navigate('/dashboard/admin');
-    } else {
-      setError('Invalid demo credentials. Use student@university.edu, instructor@university.edu, or admin@university.edu (password: password123)');
+    try {
+      const response = await api.post('/login', formData);
+      const { access_token, user } = response.data;
+
+      localStorage.setItem('token', access_token);
+      localStorage.setItem('user', JSON.stringify(user));
+
+      // Redirect based on role
+      const roleName = user.role.name.toLowerCase();
+      if (roleName === 'admin') {
+        navigate('/dashboard/admin');
+      } else if (roleName === 'instructor') {
+        navigate('/dashboard/instructor');
+      } else if (roleName === 'student') {
+        navigate('/dashboard/student');
+      } else {
+        navigate('/');
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || 'Login failed. Please check your credentials.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -51,7 +69,7 @@ const Login = () => {
             <label><FiMail /> Email</label>
             <input
               type="email"
-              placeholder="yourname@university.edu"
+              placeholder="Enter your email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               required
@@ -60,21 +78,32 @@ const Login = () => {
 
           <div className="form-group">
             <label><FiLock /> Password</label>
-            <input
-              type="password"
-              placeholder="••••••••"
-              value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              required
-            />
+            <div className="password-input-wrapper">
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter your password"
+                className="form-control"
+                value={formData.password}
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                required
+              />
+              <div 
+                className="password-toggle-icon" 
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <FiEyeOff /> : <FiEye />}
+              </div>
+            </div>
           </div>
 
           <div className="form-options">
             <Link to="/forgot-password">Forgot password?</Link>
           </div>
 
-          <button type="submit" className="btn btn-primary auth-btn">
-            Login <FiArrowRight />
+          <button type="submit" className="btn btn-primary auth-btn" disabled={loading}>
+            {loading ? 'Logging in...' : (
+              <>Login <FiArrowRight /></>
+            )}
           </button>
         </form>
 

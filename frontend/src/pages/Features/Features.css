@@ -46,8 +46,9 @@
 .workflow-card {
   padding: 4rem;
   text-align: center;
-  background: var(--color-accent-gradient);
-  color: white;
+  background: var(--color-accent-gradient) !important;
+  color: white !important;
+  border: none !important;
 }
 
 .workflow-header {
