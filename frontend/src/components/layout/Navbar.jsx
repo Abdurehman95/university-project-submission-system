@@ -26,7 +26,16 @@ const Navbar = () => {
     { name: 'Contact', path: '/contact' },
   ];
 
+  const user = JSON.parse(localStorage.getItem('user'));
 
+  // Simplified displayLinks to just navLinks as requested
+  const displayLinks = navLinks;
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    window.location.href = '/login';
+  };
 
   return (
     <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
@@ -38,7 +47,7 @@ const Navbar = () => {
 
         {/* Desktop Nav */}
         <ul className="nav-menu">
-          {navLinks.map((link) => (
+          {displayLinks.map((link) => (
             <li key={link.path}>
               <Link
                 to={link.path}
@@ -54,8 +63,17 @@ const Navbar = () => {
         </ul>
 
         <div className="nav-actions">
-          <Link to="/login" className="btn btn-outline">Login</Link>
-          <Link to="/register" className="btn btn-primary">Register</Link>
+          {user ? (
+            <>
+              <Link to="/login" className="btn btn-outline">Login</Link>
+              <button onClick={handleLogout} className="btn btn-primary">Logout</button>
+            </>
+          ) : (
+            <>
+              <Link to="/login" className="btn btn-outline">Login</Link>
+              <Link to="/register" className="btn btn-primary">Register</Link>
+            </>
+          )}
         </div>
 
         {/* Mobile Toggle */}
@@ -63,17 +81,31 @@ const Navbar = () => {
           {isOpen ? <HiX /> : <HiMenuAlt3 />}
         </button>
 
+        {/* Mobile Menu Backdrop */}
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="nav-overlay"
+              onClick={() => setIsOpen(false)}
+            />
+          )}
+        </AnimatePresence>
+
         {/* Mobile Menu */}
         <AnimatePresence>
           {isOpen && (
             <motion.div
-              initial={{ opacity: 0, x: '100%' }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: '100%' }}
-              className="mobile-menu glass-panel"
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'tween', duration: 0.3 }}
+              className="mobile-menu"
             >
               <div className="mobile-links">
-                {navLinks.map((link) => (
+                {displayLinks.map((link) => (
                   <Link
                     key={link.path}
                     to={link.path}
@@ -83,13 +115,25 @@ const Navbar = () => {
                     {link.name}
                   </Link>
                 ))}
-
-
               </div>
 
               <div className="mobile-actions">
-                <Link to="/login" className="btn btn-outline" onClick={() => setIsOpen(false)}>Login</Link>
-                <Link to="/register" className="btn btn-primary" onClick={() => setIsOpen(false)}>Register</Link>
+                {user ? (
+                  <>
+                    <Link to="/login" className="btn btn-outline" onClick={() => setIsOpen(false)}>Login</Link>
+                    <button 
+                      onClick={handleLogout} 
+                      className="btn btn-primary"
+                    >
+                      Logout
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link to="/login" className="btn btn-outline" onClick={() => setIsOpen(false)}>Login</Link>
+                    <Link to="/register" className="btn btn-primary" onClick={() => setIsOpen(false)}>Register</Link>
+                  </>
+                )}
               </div>
             </motion.div>
           )}
