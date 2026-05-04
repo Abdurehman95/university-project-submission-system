@@ -1,20 +1,51 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { FiMail, FiLock, FiUser, FiArrowRight, FiUsers } from 'react-icons/fi';
-import { Link } from 'react-router-dom';
+import { FiMail, FiLock, FiUser, FiArrowRight, FiUsers, FiAlertCircle, FiEye, FiEyeOff } from 'react-icons/fi';
+import { useNavigate, Link } from 'react-router-dom';
+import api from '../../services/api';
 import '../Login/Auth.css';
 
 const Register = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
     role: 'student'
   });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Register attempt:', formData);
+    setError('');
+    setLoading(true);
+
+    // Map role name to ID (Admin: 1, Instructor: 2, Student: 3)
+    const roleIdMap = {
+      admin: 1,
+      instructor: 2,
+      student: 3
+    };
+
+    try {
+      const payload = {
+        ...formData,
+        role_id: roleIdMap[formData.role],
+        password_confirmation: formData.password
+      };
+
+      const response = await api.post('/register', payload);
+      
+      alert(response.data.message || 'Registration successful. Please login.');
+      navigate('/login');
+
+    } catch (err) {
+      setError(err.response?.data?.message || 'Registration failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -28,6 +59,12 @@ const Register = () => {
           <h2 className="text-gradient">Join UniSubmit</h2>
           <p>Create your institutional account</p>
         </div>
+
+        {error && (
+          <div className="auth-error">
+            <FiAlertCircle /> {error}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
@@ -65,17 +102,28 @@ const Register = () => {
 
           <div className="form-group">
             <label><FiLock /> Password</label>
-            <input
-              type="password"
-              placeholder="Min 8 characters"
-              value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              required
-            />
+            <div className="password-input-wrapper">
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Min 8 characters"
+                className="form-control"
+                value={formData.password}
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                required
+              />
+              <div 
+                className="password-toggle-icon" 
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <FiEyeOff /> : <FiEye />}
+              </div>
+            </div>
           </div>
 
-          <button type="submit" className="btn btn-primary auth-btn">
-            Create Account <FiArrowRight />
+          <button type="submit" className="btn btn-primary auth-btn" disabled={loading}>
+            {loading ? 'Creating account...' : (
+              <>Create Account <FiArrowRight /></>
+            )}
           </button>
         </form>
 
