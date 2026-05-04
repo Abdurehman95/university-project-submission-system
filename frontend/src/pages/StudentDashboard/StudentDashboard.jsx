@@ -1,40 +1,110 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import api from '../../services/api';
 import {
   FiGrid, FiBook, FiClock, FiCheckSquare, FiTrendingUp,
   FiBell, FiCalendar, FiFileText, FiMessageSquare,
-  FiChevronRight, FiAlertCircle, FiPlus, FiLogOut, FiStar, FiMenu, FiX
+  FiChevronRight, FiAlertCircle, FiPlus, FiLogOut, FiStar, FiActivity, FiMenu, FiX
 } from 'react-icons/fi';
+import { AnimatePresence } from 'framer-motion';
 import './StudentDashboard.css';
 
 const StudentDashboard = () => {
   const [activeTab, setActiveTab] = useState('Project Overview');
+  const [stats, setStats] = useState([]);
+  const [assignments, setAssignments] = useState([]);
+  const [availableProjects, setAvailableProjects] = useState([]);
+  const [grades, setGrades] = useState([]);
+  const [revisions, setRevisions] = useState([]);
+  const [selectedAssignmentId, setSelectedAssignmentId] = useState('');
+  const [file, setFile] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  // Mock Data
-  const stats = [
-    { title: 'Enrolled Courses', value: '6', icon: <FiBook />, color: '#6366f1' },
-    { title: 'Pending Assignments', value: '3', icon: <FiClock />, color: '#f59e0b' },
-    { title: 'Submitted', value: '12', icon: <FiCheckSquare />, color: '#10b981' },
-    { title: 'Average Score', value: '88%', icon: <FiTrendingUp />, color: '#ec4899' },
-  ];
+  useEffect(() => {
+    fetchData();
+  }, [activeTab]);
 
-  const deadlines = [
-    { id: 1, title: 'Database System Project', course: 'CS302', date: 'Oct 15, 2023', daysLeft: 2, status: 'soon' },
-    { id: 2, title: 'Network Security Essay', course: 'CS405', date: 'Oct 18, 2023', daysLeft: 5, status: 'track' },
-    { id: 3, title: 'AI Ethics Presentation', course: 'CS501', date: 'Oct 12, 2023', daysLeft: 0, status: 'overdue' },
-  ];
+  const fetchData = async () => {
+    try {
+      if (activeTab === 'Project Overview' || activeTab === 'Progress Tracker') {
+        const statsRes = await api.get('/student/stats');
+        setStats(statsRes.data.stats || []);
+        const assignRes = await api.get('/student/assignments');
+        setAssignments(assignRes.data || []);
+      } else if (activeTab === 'Acceptance & Task Center') {
+        const availRes = await api.get('/student/available-projects');
+        setAvailableProjects(availRes.data || []);
+      } else if (activeTab === 'Submission Upload Center' || activeTab === 'Milestones & Deadlines') {
+        const assignRes = await api.get('/student/assignments');
+        setAssignments(assignRes.data || []);
+      } else if (activeTab === 'Grade & Feedback Center') {
+        const gradeRes = await api.get('/student/grades');
+        setGrades(gradeRes.data || []);
+      } else if (activeTab === 'Revision Requests') {
+        const revRes = await api.get('/student/revisions');
+        setRevisions(revRes.data || []);
+      }
+    } catch (err) {
+      console.error('Failed to fetch student data:', err);
+    }
+  };
 
-  const submissions = [
-    { id: 1, title: 'Algorithm Analysis Lab', course: 'CS201', date: 'Oct 05, 2023', status: 'Graded', score: '95/100' },
-    { id: 2, title: 'Software Engineering Proposal', course: 'CS304', date: 'Oct 08, 2023', status: 'Submitted', score: null },
-  ];
+  const handleJoinProject = async (projectId) => {
+    try {
+      await api.post(`/student/projects/${projectId}/join`);
+      alert('Project accepted successfully!');
+      fetchData();
+    } catch (err) {
+      console.error(err);
+      alert('Failed to accept project');
+    }
+  };
 
-  const courses = [
-    { id: 1, name: 'Advanced Database Systems', code: 'CS302', instructor: 'Dr. Sarah Wilson', credits: 4 },
-    { id: 2, name: 'Web Dev Frameworks', code: 'CS204', instructor: 'Prof. Henderson', credits: 3 },
-    { id: 3, name: 'Network Security', code: 'CS405', instructor: 'Dr. Alice Brown', credits: 4 },
-  ];
+  const handleResubmit = (assignmentId) => {
+    setSelectedAssignmentId(assignmentId);
+    setActiveTab('Submission Upload Center');
+  };
+
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
+
+  const handleSubmitProject = async (e) => {
+    e.preventDefault();
+    if (!selectedAssignmentId) {
+      alert("Please select an assignment to submit.");
+      return;
+    }
+    const formData = new FormData();
+    if (file) {
+      formData.append('files[]', file);
+    }
+    formData.append('notes', 'Project Submission');
+
+    try {
+      await api.post(`/student/assignments/${selectedAssignmentId}/submit`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      alert('Project submitted successfully!');
+      setFile(null);
+      setSelectedAssignmentId('');
+      fetchData();
+      setActiveTab('Project Overview');
+    } catch (err) {
+      console.error(err);
+      alert('Submission failed');
+    }
+  };
+
+  const getScoreColor = (score) => {
+    const s = parseFloat(score);
+    if (isNaN(s)) return 'var(--color-text-secondary)';
+    if (s < 50) return '#ef4444'; // Red
+    if (s <= 85) return '#f97316'; // Orange
+    return '#10b981'; // Green
+  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -60,7 +130,7 @@ const StudentDashboard = () => {
               {stats.map((stat, i) => (
                 <motion.div key={i} className="stat-card glass-panel kpi-card" variants={itemVariants}>
                   <div className="stat-icon" style={{ backgroundColor: `${stat.color}15`, color: stat.color }}>
-                    {stat.icon}
+                    <FiTrendingUp />
                   </div>
                   <div className="stat-info">
                     <h3 style={{ fontSize: '1.75rem', fontWeight: 700 }}>{stat.value}</h3>
@@ -81,15 +151,16 @@ const StudentDashboard = () => {
                     <h2><FiCalendar /> Active Milestones</h2>
                   </div>
                   <div className="deadline-list" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                    {deadlines.map(deadline => (
-                      <div key={deadline.id} className={`deadline-item ${deadline.status}`} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: 'var(--color-bg-primary)', borderRadius: '12px', borderLeft: `4px solid ${deadline.status === 'soon' ? '#f59e0b' : deadline.status === 'track' ? '#10b981' : '#ef4444'}` }}>
+                    {assignments.map(a => (
+                      <div key={a.id} className="deadline-item track" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: 'var(--color-bg-primary)', borderRadius: '12px', borderLeft: `4px solid #10b981` }}>
                         <div className="deadline-info">
-                          <h4 style={{ fontWeight: 600 }}>{deadline.title}</h4>
-                          <span style={{ fontSize: '0.85rem', opacity: 0.6 }}>{deadline.course} • {deadline.date}</span>
+                          <h4 style={{ fontWeight: 600 }}>{a.project_title}</h4>
+                          <span style={{ fontSize: '0.85rem', opacity: 0.6 }}>{a.category} • {a.deadline}</span>
                         </div>
-                        <span className="countdown-timer" style={{ fontSize: '0.85rem' }}><FiClock /> {deadline.daysLeft}d left</span>
+                        <span className="status-badge status-active" style={{ fontSize: '0.85rem' }}>{a.status}</span>
                       </div>
                     ))}
+                    {assignments.length === 0 && <p style={{opacity: 0.6}}>No active assignments right now.</p>}
                   </div>
                 </motion.section>
               </div>
@@ -105,9 +176,9 @@ const StudentDashboard = () => {
                   </div>
                   <div style={{ padding: '1rem' }}>
                     <div className="progress-container" style={{ height: '12px' }}>
-                      <div className="progress-bar" style={{ width: '72%', background: 'var(--color-accent-gradient)' }}></div>
+                      <div className="progress-bar" style={{ width: '45%', background: 'var(--color-accent-gradient)' }}></div>
                     </div>
-                    <p style={{ textAlign: 'center', marginTop: '1rem', fontWeight: 600 }}>72% Total Completion</p>
+                    <p style={{ textAlign: 'center', marginTop: '1rem', fontWeight: 600 }}>In Progress</p>
                   </div>
                 </motion.section>
               </div>
@@ -119,71 +190,59 @@ const StudentDashboard = () => {
         return (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="courses-view">
             <div className="section-header-row">
-              <h2>Pending Project Invitations</h2>
+              <h2>Available Projects</h2>
+              <p>Explore and join projects created by your instructors.</p>
             </div>
-            <div className="glass-panel" style={{ padding: '2rem', marginTop: '1rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div>
-                  <h3 style={{ marginBottom: '0.5rem' }}>E-Commerce Platform Re-design</h3>
-                  <p style={{ opacity: 0.6 }}>Assigned by Prof. Henderson • Oct 20</p>
-                </div>
-                <div style={{ display: 'flex', gap: '1rem' }}>
-                  <button className="btn btn-success btn-sm">Accept Project</button>
-                  <button className="btn btn-outline btn-sm">Decline</button>
-                </div>
+            {availableProjects.map(a => (
+               <div key={a.id} className="glass-panel" style={{ padding: '2rem', marginTop: '1rem' }}>
+                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                   <div>
+                     <h3 style={{ marginBottom: '0.5rem' }}>{a.title}</h3>
+                     <p style={{ opacity: 0.6 }}>Instructor: {a.instructor} • Category: {a.category}</p>
+                     <p style={{ fontSize: '0.85rem', marginTop: '0.5rem', maxWidth: '600px' }}>{a.description}</p>
+                   </div>
+                   <div style={{ display: 'flex', gap: '1rem' }}>
+                     <button className="btn btn-success btn-sm" onClick={() => handleJoinProject(a.id)}>Accept Project</button>
+                   </div>
+                 </div>
+               </div>
+            ))}
+            {availableProjects.length === 0 && (
+              <div className="glass-panel" style={{ padding: '3rem', textAlign: 'center', marginTop: '1rem' }}>
+                <FiAlertCircle size={40} color="var(--color-accent-primary)" style={{ marginBottom: '1rem' }} />
+                <p style={{ opacity: 0.6 }}>No new projects available to join at this time.</p>
               </div>
-            </div>
+            )}
           </motion.div>
         );
 
       case 'Progress Tracker':
         return (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="tab-content">
-            <div className="glass-panel" style={{ padding: '2rem' }}>
-              <h2>Workflow Progress</h2>
-              <div style={{ marginTop: '2rem' }}>
-                {[
-                  { step: 'Requirements Gathering', status: 'completed' },
-                  { step: 'System Design', status: 'completed' },
-                  { step: 'Implementation', status: 'active' },
-                  { step: 'Testing & QA', status: 'pending' },
-                  { step: 'Final Submission', status: 'pending' }
-                ].map((s, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', marginBottom: '1.5rem' }}>
-                    <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: s.status === 'completed' ? 'var(--color-success)' : s.status === 'active' ? 'var(--color-accent-primary)' : 'rgba(0,0,0,0.1)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      {s.status === 'completed' ? <FiCheckSquare size={16} /> : i + 1}
+            <div className="section-header-row">
+              <h2>My Progress Tracker</h2>
+            </div>
+            <div className="glass-panel" style={{ marginTop: '1rem', padding: '1.5rem' }}>
+              <div className="progress-list" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                {assignments.map(a => (
+                  <div key={a.id} className="progress-item">
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                      <h4 style={{ fontWeight: 600 }}>{a.project_title}</h4>
+                      <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--color-accent-primary)' }}>{a.status}</span>
                     </div>
-                    <span style={{ fontWeight: s.status === 'active' ? 700 : 400, opacity: s.status === 'pending' ? 0.4 : 1 }}>{s.step}</span>
-                    {s.status === 'active' && <span className="status-badge status-active" style={{ marginLeft: 'auto' }}>In Progress</span>}
+                    <div className="progress-container" style={{ height: '10px' }}>
+                      <div 
+                        className="progress-bar" 
+                        style={{ 
+                          width: a.status === 'Graded' ? '100%' : a.has_submission ? '75%' : '25%',
+                          background: a.status === 'Graded' ? '#10b981' : 'var(--color-accent-gradient)'
+                        }}
+                      ></div>
+                    </div>
                   </div>
                 ))}
+                {assignments.length === 0 && <p style={{opacity: 0.6}}>Join a project to track your progress.</p>}
               </div>
-            </div>
-          </motion.div>
-        );
-
-      case 'Milestones & Deadlines':
-        return (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="assignments-view">
-            <div className="section-header-row">
-              <h2>Project Milestones</h2>
-            </div>
-            <div className="deadline-list" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
-              {deadlines.map(deadline => (
-                <div key={deadline.id} className="glass-panel kpi-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.5rem' }}>
-                  <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
-                    <FiCalendar size={24} color="var(--color-accent-primary)" />
-                    <div>
-                      <h4 style={{ fontWeight: 600 }}>{deadline.title}</h4>
-                      <p style={{ fontSize: '0.85rem', opacity: 0.6 }}>{deadline.course}</p>
-                    </div>
-                  </div>
-                  <div style={{ textAlign: 'right' }}>
-                    <p style={{ fontWeight: 700, color: '#ef4444' }}>Due: {deadline.date}</p>
-                    <span style={{ fontSize: '0.8rem', opacity: 0.5 }}>{deadline.daysLeft} days remaining</span>
-                  </div>
-                </div>
-              ))}
             </div>
           </motion.div>
         );
@@ -196,8 +255,41 @@ const StudentDashboard = () => {
                 <FiPlus size={40} color="var(--color-accent-primary)" />
               </div>
               <h2>Upload Deliverables</h2>
-              <p style={{ opacity: 0.6, maxWidth: '400px', margin: '1rem auto 2rem' }}>Drag and drop your project files here. Supported: ZIP, PDF, MP4 (Max 500MB)</p>
-              <button className="btn btn-primary">Select Files</button>
+              <p style={{ opacity: 0.6, maxWidth: '400px', margin: '1rem auto 2rem' }}>Select your project and upload the files.</p>
+              
+              <form onSubmit={handleSubmitProject} style={{ maxWidth: '400px', margin: '0 auto', textAlign: 'left', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <div>
+                  <label>Select Assignment</label>
+                  <select 
+                    value={selectedAssignmentId} 
+                    onChange={e => setSelectedAssignmentId(e.target.value)} 
+                    required 
+                    style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ddd', marginTop: '0.5rem' }}
+                  >
+                    <option value="">Select an assignment...</option>
+                    {assignments
+                      .filter(a => {
+                        const statusMatch = (
+                          !a.has_submission || 
+                          a.status === 'Revision Required' || 
+                          a.status === 'revision_required' ||
+                          a.assignment_status === 'revision_required' ||
+                          a.status === 'Pending Submission'
+                        );
+                        return statusMatch;
+                      })
+                      .map(a => (
+                        <option key={a.id} value={a.id}>{a.project_title || 'Untitled Project'}</option>
+                      ))
+                    }
+                  </select>
+                </div>
+                <div>
+                  <label>Upload File (ZIP, PDF)</label>
+                  <input type="file" onChange={handleFileChange} style={{ width: '100%', padding: '0.75rem', marginTop: '0.5rem' }} />
+                </div>
+                <button type="submit" className="btn btn-success" style={{ width: '100%' }}>Submit Project</button>
+              </form>
             </div>
           </motion.div>
         );
@@ -205,10 +297,28 @@ const StudentDashboard = () => {
       case 'Revision Requests':
         return (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="tab-content">
-            <div className="glass-panel" style={{ padding: '2rem' }}>
-              <h2>My Revision Requests</h2>
-              <p style={{ opacity: 0.6, marginTop: '1rem' }}>No active revision requests at the moment.</p>
-              <button className="btn btn-outline" style={{ marginTop: '2rem' }}>New Request</button>
+            <div className="section-header-row">
+              <h2>Revision Requests</h2>
+            </div>
+            <div className="revisions-list" style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              {revisions.map(r => (
+                <div key={r.id} className="glass-panel" style={{ padding: '1.5rem', borderLeft: '4px solid #f97316' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                    <h3 style={{ fontSize: '1.1rem' }}>{r.project_title}</h3>
+                    <span style={{ fontSize: '0.85rem', opacity: 0.6 }}>Requested on {r.requested_on}</span>
+                  </div>
+                  <div style={{ background: 'var(--color-bg-primary)', padding: '1rem', borderRadius: '8px', marginBottom: '1rem' }}>
+                    <p style={{ fontWeight: 600, fontSize: '0.9rem', marginBottom: '0.5rem' }}>Instructor Feedback:</p>
+                    <p style={{ opacity: 0.8 }}>{r.feedback}</p>
+                  </div>
+                  <button className="btn btn-outline btn-sm" onClick={() => handleResubmit(r.assignment_id)}>Resubmit Now</button>
+                </div>
+              ))}
+              {revisions.length === 0 && (
+                <div className="glass-panel" style={{ padding: '3rem', textAlign: 'center' }}>
+                  <p style={{ opacity: 0.6 }}>No active revision requests.</p>
+                </div>
+              )}
             </div>
           </motion.div>
         );
@@ -224,22 +334,37 @@ const StudentDashboard = () => {
                 <thead>
                   <tr>
                     <th>Project</th>
-                    <th>Date</th>
+                    <th>Graded On</th>
                     <th>Grade</th>
                     <th>Feedback</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {submissions.map(sub => (
-                    <tr key={sub.id}>
-                      <td style={{ fontWeight: 600 }}>{sub.title}</td>
-                      <td>{sub.date}</td>
-                      <td style={{ fontWeight: 700, color: 'var(--color-accent-primary)' }}>{sub.score || '--'}</td>
-                      <td><button className="text-link">View Comments</button></td>
+                  {grades.map(g => (
+                    <tr key={g.id}>
+                      <td style={{ fontWeight: 600 }}>{g.project_title}</td>
+                      <td>{g.graded_on}</td>
+                      <td style={{ fontWeight: 700, color: getScoreColor(g.score) }}>{g.score}</td>
+                      <td>{g.feedback}</td>
                     </tr>
                   ))}
+                  {grades.length === 0 && (
+                    <tr>
+                      <td colSpan="4" style={{ textAlign: 'center', opacity: 0.6, padding: '2rem' }}>No grades available yet.</td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
+            </div>
+          </motion.div>
+        );
+
+      case 'Milestones & Deadlines':
+        return (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="tab-content">
+            <div className="glass-panel" style={{ padding: '2rem', textAlign: 'center' }}>
+              <h2>{activeTab} Module</h2>
+              <p style={{ opacity: 0.6 }}>This feature relies on granular task breakdowns, available in Phase 2.</p>
             </div>
           </motion.div>
         );
@@ -249,9 +374,28 @@ const StudentDashboard = () => {
     }
   };
 
+  const user = JSON.parse(localStorage.getItem('user')) || { name: 'Student', role: { name: 'Student' } };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    window.location.href = '/login';
+  };
+
   return (
-    <div className={`student-dashboard-wrapper ${isSidebarOpen ? 'sidebar-open' : ''}`}>
-      <div className="sidebar-overlay" onClick={() => setIsSidebarOpen(false)}></div>
+    <div className="student-dashboard-wrapper">
+      <AnimatePresence>
+        {isSidebarOpen && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="sidebar-overlay"
+            onClick={() => setIsSidebarOpen(false)}
+          />
+        )}
+      </AnimatePresence>
+
       <aside className={`student-sidebar ${isSidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-brand">
           <div className="brand-icon">U</div>
@@ -266,7 +410,7 @@ const StudentDashboard = () => {
             <FiCheckSquare /> <span className="nav-label">Acceptance Hub</span>
           </div>
           <div className={`nav-link ${activeTab === 'Progress Tracker' ? 'active' : ''}`} onClick={() => { setActiveTab('Progress Tracker'); setIsSidebarOpen(false); }}>
-            <FiTrendingUp /> <span className="nav-label">Progress Tracker</span>
+            <FiActivity /> <span className="nav-label">Progress Tracker</span>
           </div>
           <div className={`nav-link ${activeTab === 'Milestones & Deadlines' ? 'active' : ''}`} onClick={() => { setActiveTab('Milestones & Deadlines'); setIsSidebarOpen(false); }}>
             <FiCalendar /> <span className="nav-label">Milestones</span>
@@ -284,13 +428,19 @@ const StudentDashboard = () => {
 
         <div className="sidebar-footer">
           <div className="user-snippet">
-            <div className="avatar">AS</div>
+            <div className="avatar" style={{ background: 'var(--color-accent-primary)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600 }}>
+              {user.name.split(' ').map(n => n[0]).join('')}
+            </div>
             <div className="user-info">
-              <div className="user-name" style={{ fontWeight: 600 }}>Alex Smith</div>
-              <p style={{ fontSize: '0.75rem', opacity: 0.6 }}>Student</p>
+              <div className="user-name" style={{ fontWeight: 600 }}>{user.name}</div>
+              <p style={{ fontSize: '0.75rem', opacity: 0.6 }}>{user?.role?.name || 'Student'}</p>
             </div>
           </div>
-          <button className="nav-link" style={{ marginTop: '1.5rem', width: '100%', border: 'none', background: 'transparent', justifyContent: 'center' }}>
+          <button 
+            onClick={handleLogout}
+            className="nav-link" 
+            style={{ marginTop: '1.5rem', width: '100%', border: 'none', background: 'transparent', justifyContent: 'center' }}
+          >
             <FiLogOut /> <span className="nav-label">Logout</span>
           </button>
         </div>
@@ -298,8 +448,8 @@ const StudentDashboard = () => {
 
       <header className="student-header">
         <div className="header-left">
-          <button className="mobile-menu-btn" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
-            {isSidebarOpen ? <FiX /> : <FiMenu />}
+          <button className="mobile-menu-trigger" onClick={() => setIsSidebarOpen(true)}>
+            <FiMenu />
           </button>
           <h1>{activeTab}</h1>
         </div>
@@ -308,12 +458,10 @@ const StudentDashboard = () => {
             <FiPlus /> Get Pro
           </button>
           <div className="header-user-dropdown">
-            <img 
-              src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=100" 
-              alt="Profile" 
-              className="header-avatar"
-            />
-            <span style={{ fontWeight: 500, fontSize: '0.9rem' }}>Alex S. <FiGrid size={12} style={{ marginLeft: '4px', opacity: 0.6 }} /></span>
+            <div className="header-avatar" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--color-accent-primary)', color: 'white', fontWeight: 600 }}>
+              {user.name.split(' ').map(n => n[0]).join('')}
+            </div>
+            <span style={{ fontWeight: 500, fontSize: '0.9rem' }}>{user.name.split(' ')[0]} <FiGrid size={12} style={{ marginLeft: '4px', opacity: 0.6 }} /></span>
           </div>
         </div>
       </header>

@@ -21,6 +21,7 @@
   padding: 1.5rem 0;
   border-radius: 0 40px 40px 0;
   box-shadow: 10px 0 30px rgba(0, 0, 0, 0.02);
+  transition: transform 0.3s ease, width 0.3s ease;
 }
 
 .sidebar-brand {
@@ -164,7 +165,7 @@
 /* Main Content Area */
 .student-main {
   grid-column: 2 / 3;
-  padding: 2rem 2.5rem;
+  padding: 1rem 2.5rem;
   overflow-y: auto;
 }
 
@@ -181,8 +182,10 @@
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-auto-rows: min-content;
+  align-content: start;
   gap: 1.5rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
 .stat-card {
@@ -211,7 +214,7 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
 .section-header {
@@ -275,112 +278,104 @@
 }
 
 /* Responsive */
+.sidebar-overlay {
+  display: none;
+}
+
+.mobile-menu-trigger {
+  display: none;
+}
+
 @media (max-width: 1024px) {
   .student-dashboard-wrapper {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto 1fr !important;
   }
-
+  
   .student-sidebar {
-    position: fixed;
-    left: -100%;
-    top: 0;
-    bottom: 0;
-    z-index: 1000;
-    width: var(--sidebar-width);
-    transition: left var(--transition-smooth);
-    border-radius: 0 40px 40px 0;
-    box-shadow: 20px 0 50px rgba(0, 0, 0, 0.1);
-    background: white;
-  }
-
-  .student-sidebar.open {
+    position: fixed !important;
     left: 0;
+    top: 0;
+    z-index: 1000 !important;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    border-radius: 0 !important;
+    height: 100vh !important;
+    width: 280px !important;
+  }
+  
+  .student-sidebar.open {
+    transform: translateX(0);
   }
 
-  .sidebar-overlay {
-    display: none;
-    position: fixed;
+  /* Ensure labels are visible in the overlay sidebar */
+  .student-sidebar .nav-label {
+    display: inline !important;
+  }
+  
+  .student-header {
+    grid-column: 1 / -1 !important;
+    position: fixed !important;
     top: 0;
     left: 0;
     right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.4);
+    z-index: 900 !important;
+    padding: 0 1rem !important;
+  }
+  
+  .student-main {
+    grid-column: 1 / -1 !important;
+    margin-top: var(--header-height) !important;
+    padding: 1rem !important;
+  }
+  
+  .stats-grid {
+    align-content: start;
+    height: fit-content;
+  }
+  
+  .mobile-menu-trigger {
+    display: flex !important;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    margin-right: 1rem;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .sidebar-overlay {
+    display: block !important;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(4px);
     z-index: 999;
-  }
-
-  .sidebar-open .sidebar-overlay {
-    display: block;
-  }
-
-  .student-header, .student-main {
-    grid-column: 1;
-  }
-
-  .mobile-menu-btn {
-    display: block;
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    color: white; /* Header is orange, icon should be white */
-    cursor: pointer;
-    margin-right: 1rem;
-  }
-
-  .nav-label {
-    display: block !important;
-  }
-
-  .user-snippet .user-name, .user-snippet .user-info p {
-    display: block !important;
-  }
-
-  .sidebar-brand span {
-    display: block !important;
-  }
-}
-
-@media (max-width: 768px) {
-  .student-header {
-    padding: 0 1.5rem;
-  }
-
-  .student-main {
-    padding: 1.5rem 1rem;
   }
 
   .header-right .btn-upgrade {
     display: none;
   }
+}
 
+@media (max-width: 768px) {
   .stats-grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
+    grid-template-columns: 1fr !important;
   }
-
+  
   .dashboard-main-content {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
+    grid-template-columns: 1fr !important;
   }
-
-  .section-header {
+  
+  .header-user-dropdown span {
+    display: none;
+  }
+  
+  .section-header-row {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: flex-start !important;
     gap: 1rem;
   }
 }
-
-@media (max-width: 480px) {
-  .student-header {
-    padding: 0 1rem;
-  }
-
-  .header-left h1 {
-    font-size: 1.1rem;
-  }
-
-  .stat-card {
-    gap: 1rem;
-    padding: 1.25rem;
-  }
-}
