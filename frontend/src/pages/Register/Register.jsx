@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { FiMail, FiLock, FiUser, FiArrowRight, FiUsers, FiAlertCircle, FiEye, FiEyeOff } from 'react-icons/fi';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../../services/api';
+import { showToast } from '../../utils/toast';
 import '../Login/Auth.css';
 
 const Register = () => {
@@ -38,7 +39,7 @@ const Register = () => {
 
       const response = await api.post('/register', payload);
       
-      alert(response.data.message || 'Registration successful. Please login.');
+      showToast(response.data.message || 'Registration successful. Please login.', 'success');
       navigate('/login');
 
     } catch (err) {
