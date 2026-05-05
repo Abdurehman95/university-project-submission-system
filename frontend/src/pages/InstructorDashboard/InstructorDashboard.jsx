@@ -7,6 +7,7 @@ import {
   FiChevronRight, FiEdit3, FiTrash2, FiDownload, FiMessageSquare,
   FiSend, FiBell, FiActivity, FiStar, FiX, FiMenu
 } from 'react-icons/fi';
+import { showToast } from '../../utils/toast';
 import './InstructorDashboard.css';
 
 const InstructorDashboard = () => {
@@ -67,13 +68,13 @@ const InstructorDashboard = () => {
     e.preventDefault();
     try {
       await api.post('/instructor/projects', newProject);
-      alert('Project created successfully!');
+      showToast('Project created successfully!', 'success');
       setNewProject({ title: '', category_id: '', description: '', deadline: '' });
       setShowProjectModal(false);
       setActiveSection('Assignment');
     } catch (err) {
       console.error(err);
-      alert('Failed to create project');
+      showToast('Failed to create project', 'error');
     }
   };
 
@@ -86,30 +87,30 @@ const InstructorDashboard = () => {
     e.preventDefault();
     try {
       await api.post(`/instructor/submissions/${selectedSubmission.id}/evaluate`, evaluationData);
-      alert('Evaluation submitted successfully!');
+      showToast('Evaluation submitted successfully!', 'success');
       setShowEvaluationModal(false);
       setEvaluationData({ score: '', comments: '' });
       fetchData();
     } catch (err) {
       console.error(err);
-      alert('Failed to submit evaluation');
+      showToast('Failed to submit evaluation', 'error');
     }
   };
 
   const handleRequestRevision = async () => {
     if (!evaluationData.comments) {
-      alert("Please provide feedback for the revision.");
+      showToast("Please provide feedback for the revision.", "error");
       return;
     }
     try {
       await api.post(`/instructor/submissions/${selectedSubmission.id}/revision`, { comments: evaluationData.comments });
-      alert('Revision requested successfully!');
+      showToast('Revision requested successfully!', 'success');
       setShowEvaluationModal(false);
       setEvaluationData({ score: '', comments: '' });
       fetchData();
     } catch (err) {
       console.error(err);
-      alert('Failed to request revision');
+      showToast('Failed to request revision', 'error');
     }
   };
 
