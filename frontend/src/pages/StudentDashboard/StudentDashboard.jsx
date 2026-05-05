@@ -7,6 +7,7 @@ import {
   FiChevronRight, FiAlertCircle, FiPlus, FiLogOut, FiStar, FiActivity, FiMenu, FiX
 } from 'react-icons/fi';
 import { AnimatePresence } from 'framer-motion';
+import { showToast } from '../../utils/toast';
 import './StudentDashboard.css';
 
 const StudentDashboard = () => {
@@ -52,11 +53,11 @@ const StudentDashboard = () => {
   const handleJoinProject = async (projectId) => {
     try {
       await api.post(`/student/projects/${projectId}/join`);
-      alert('Project accepted successfully!');
+      showToast('Project accepted successfully!', 'success');
       fetchData();
     } catch (err) {
       console.error(err);
-      alert('Failed to accept project');
+      showToast('Failed to accept project', 'error');
     }
   };
 
@@ -72,7 +73,7 @@ const StudentDashboard = () => {
   const handleSubmitProject = async (e) => {
     e.preventDefault();
     if (!selectedAssignmentId) {
-      alert("Please select an assignment to submit.");
+      showToast("Please select an assignment to submit.", "error");
       return;
     }
     const formData = new FormData();
@@ -87,14 +88,14 @@ const StudentDashboard = () => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      alert('Project submitted successfully!');
+      showToast('Project submitted successfully!', 'success');
       setFile(null);
       setSelectedAssignmentId('');
       fetchData();
       setActiveTab('Project Overview');
     } catch (err) {
       console.error(err);
-      alert('Submission failed');
+      showToast('Submission failed', 'error');
     }
   };
 
