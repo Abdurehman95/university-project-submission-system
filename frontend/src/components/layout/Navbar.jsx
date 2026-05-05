@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HiMenuAlt3, HiX } from 'react-icons/hi';
+import ThemeToggle from '../common/ThemeToggle';
 import './Navbar.css';
 
 const Navbar = () => {
@@ -63,6 +64,7 @@ const Navbar = () => {
         </ul>
 
         <div className="nav-actions">
+          <ThemeToggle />
           {user ? (
             <>
               <Link to="/login" className="btn btn-outline">Login</Link>
