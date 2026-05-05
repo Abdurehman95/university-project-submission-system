@@ -63,6 +63,12 @@
   transition: transform 0.5s ease;
 }
 
+[data-theme='dark'] .hero-main-img {
+  mix-blend-mode: normal; /* Fix for dark mode invisibility */
+  filter: drop-shadow(0 10px 40px rgba(255, 120, 31, 0.2));
+  opacity: 0.9;
+}
+
 .hero-main-img:hover {
   transform: scale(1.02) translateY(-10px);
 }
