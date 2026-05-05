@@ -39,6 +39,56 @@
   --transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Dark Mode Variables */
+[data-theme='dark'] {
+  --color-bg-primary: #0f172a;
+  --color-bg-secondary: #1e293b;
+  --color-text-primary: #f8fafc;
+  --color-text-secondary: #94a3b8;
+  
+  --color-glass: rgba(15, 23, 42, 0.8);
+  --color-glass-border: rgba(255, 255, 255, 0.1);
+  
+  --color-accent-soft: rgba(255, 120, 31, 0.15);
+  
+  /* Additional Dark Mode Fixes */
+  --sidebar-bg: #1e293b;
+  --header-bg: rgba(15, 23, 42, 0.8);
+}
+
+[data-theme='dark'] .navbar {
+  background: rgba(15, 23, 42, 0.8) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme='dark'] .glass-panel,
+[data-theme='dark'] .glass-card,
+[data-theme='dark'] .modal-content,
+[data-theme='dark'] .glass-modal {
+  background: rgba(30, 41, 59, 0.7) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: var(--color-text-primary) !important;
+}
+
+[data-theme='dark'] .nav-item,
+[data-theme='dark'] .mobile-item {
+  color: var(--color-text-primary) !important;
+}
+
+[data-theme='dark'] .section-subtitle,
+[data-theme='dark'] .text-secondary {
+  color: var(--color-text-secondary) !important;
+}
+
+[data-theme='dark'] .bg-image-wrapper {
+  background: linear-gradient(to bottom, #0f172a, #1e293b);
+}
+
+[data-theme='dark'] .bg-image {
+  opacity: 0.35; /* Increased visibility for dark mode */
+  filter: brightness(0.7) contrast(1.1); /* Enhance image pop in dark theme */
+}
+
 * {
   margin: 0;
   padding: 0;
