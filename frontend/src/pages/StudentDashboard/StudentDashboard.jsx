@@ -8,6 +8,8 @@ import {
 } from 'react-icons/fi';
 import { AnimatePresence } from 'framer-motion';
 import { showToast } from '../../utils/toast';
+import ThemeToggle from '../../components/common/ThemeToggle';
+import DropZone from '../../components/common/DropZone';
 import './StudentDashboard.css';
 
 const StudentDashboard = () => {
@@ -286,8 +288,8 @@ const StudentDashboard = () => {
                   </select>
                 </div>
                 <div>
-                  <label>Upload File (ZIP, PDF)</label>
-                  <input type="file" onChange={handleFileChange} style={{ width: '100%', padding: '0.75rem', marginTop: '0.5rem' }} />
+                  <label>Upload Project Deliverables</label>
+                  <DropZone onFileSelect={(selectedFile) => setFile(selectedFile)} />
                 </div>
                 <button type="submit" className="btn btn-success" style={{ width: '100%' }}>Submit Project</button>
               </form>
@@ -455,6 +457,7 @@ const StudentDashboard = () => {
           <h1>{activeTab}</h1>
         </div>
         <div className="header-right">
+          <ThemeToggle />
           <button className="btn-upgrade">
             <FiPlus /> Get Pro
           </button>
