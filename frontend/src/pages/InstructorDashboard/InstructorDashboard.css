@@ -10,7 +10,7 @@
 .instructor-sidebar {
   grid-row: 1 / 3;
   width: var(--sidebar-width);
-  background: rgba(255, 255, 255, 0.85);
+  background: var(--color-bg-secondary);
   backdrop-filter: blur(20px);
   display: flex;
   flex-direction: column;
@@ -167,12 +167,12 @@
 
 /* Cards & Components */
 .glass-card {
-  background: rgba(255, 255, 255, 0.7);
+  background: var(--color-glass);
   backdrop-filter: blur(10px);
   border-radius: 20px;
   padding: 1.5rem;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-  border: 1px solid rgba(0, 0, 0, 0.02);
+  border: 1px solid var(--color-glass-border);
 }
 
 .stats-row {
@@ -240,7 +240,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 1.25rem;
-  background: var(--color-bg-primary);
+  background: var(--color-bg-secondary);
   border-radius: 15px;
   border-left: 4px solid var(--color-accent-primary);
   transition: transform 0.2s;
@@ -294,7 +294,7 @@
 }
 
 .modal-content {
-  background: white;
+  background: var(--color-bg-secondary);
   border-radius: 24px;
   padding: 2.5rem;
   width: 100%;
@@ -434,7 +434,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 1.25rem;
-  background: var(--color-bg-primary);
+  background: var(--color-bg-secondary);
   border-radius: 15px;
   border-left: 4px solid var(--color-accent-primary);
   transition: transform 0.2s;
@@ -488,11 +488,12 @@
 }
 
 .modal-content {
-  background: white;
+  background: var(--color-bg-secondary);
   border-radius: 24px;
   padding: 2.5rem;
   width: 100%;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--color-glass-border);
 }
 
 .form-group {
@@ -530,18 +531,18 @@
 
 .data-table th {
   padding: 1.25rem 1.5rem;
-  background: var(--color-bg-primary);
+  background: var(--color-bg-secondary);
   color: var(--color-text-secondary);
   font-weight: 600;
   font-size: 0.85rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid var(--color-glass-border);
 }
 
 .data-table td {
   padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+  border-bottom: 1px solid var(--color-glass-border);
   font-size: 0.95rem;
   vertical-align: middle;
 }

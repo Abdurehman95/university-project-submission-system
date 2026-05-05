@@ -8,6 +8,8 @@ import {
   FiSend, FiBell, FiActivity, FiStar, FiX, FiMenu
 } from 'react-icons/fi';
 import { showToast } from '../../utils/toast';
+import ThemeToggle from '../../components/common/ThemeToggle';
+import FilePreviewModal from '../../components/common/FilePreviewModal';
 import './InstructorDashboard.css';
 
 const InstructorDashboard = () => {
@@ -27,6 +29,7 @@ const InstructorDashboard = () => {
   const [showProjectModal, setShowProjectModal] = useState(false);
   const [newProject, setNewProject] = useState({ title: '', category_id: '', description: '', deadline: '' });
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [previewFile, setPreviewFile] = useState({ isOpen: false, url: '', name: '' });
 
   useEffect(() => {
     fetchData();
@@ -343,7 +346,18 @@ const InstructorDashboard = () => {
                         <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
                           <FiFileText color="var(--color-accent-primary)" /> <span>submission_v1.zip</span>
                         </div>
-                        <FiDownload style={{cursor: 'pointer'}} />
+                        <div style={{display: 'flex', gap: '0.5rem'}}>
+                           <button 
+                             type="button"
+                             className="btn-icon" 
+                             title="Preview"
+                             onClick={() => setPreviewFile({ isOpen: true, url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', name: 'submission_v1.pdf' })}
+                             style={{ background: 'var(--color-accent-soft)', color: 'var(--color-accent-primary)', border: 'none', padding: '5px', borderRadius: '4px', cursor: 'pointer' }}
+                           >
+                             <FiMaximize2 size={16} />
+                           </button>
+                           <FiDownload style={{cursor: 'pointer'}} />
+                        </div>
                       </div>
                     </div>
 
@@ -522,6 +536,7 @@ const InstructorDashboard = () => {
           <h1 style={{fontSize: '1.25rem', fontWeight: 600}}>{activeSection}</h1>
         </div>
         <div className="header-right">
+          <ThemeToggle />
           <button className="btn-upgrade">
             <FiPlus /> Get Pro
           </button>
@@ -537,6 +552,13 @@ const InstructorDashboard = () => {
       <main className="instructor-main">
         {renderSection()}
       </main>
+
+      <FilePreviewModal 
+        isOpen={previewFile.isOpen}
+        onClose={() => setPreviewFile({ ...previewFile, isOpen: false })}
+        fileUrl={previewFile.url}
+        fileName={previewFile.name}
+      />
     </div>
   );
 };
