@@ -332,3 +332,16 @@ It is a **dedicated academic project operations system** that ensures:
 - Academic excellence
 
 ---
+# ?? Postman Security & Environment Setup
+
+To ensure academic and system security, the following measures are implemented for API testing:
+
+## 1. Environment Protection
+- Sensitive keys are stored in .env and never pushed to GitHub.
+- *.postman_environment.json is ignored by Git.
+
+## 2. Using the Template
+- Use Local.postman_environment.json.example as a starting point.
+- Import into Postman and update variables from your local .env.
+
+---
