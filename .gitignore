@@ -30,3 +30,6 @@ pnpm-debug.log*
 # Vite / React specifics
 react-app/dist/
 react-app/node_modules/
+
+# Postman
+*.postman_environment.json
