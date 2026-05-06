@@ -63,10 +63,15 @@
   transition: transform 0.5s ease;
 }
 
+[data-theme='dark'] .hero-image-container {
+  mask-image: radial-gradient(circle at center, black 60%, transparent 95%);
+  -webkit-mask-image: radial-gradient(circle at center, black 60%, transparent 95%);
+}
+
 [data-theme='dark'] .hero-main-img {
-  mix-blend-mode: normal; /* Fix for dark mode invisibility */
-  filter: drop-shadow(0 10px 40px rgba(255, 120, 31, 0.2));
-  opacity: 0.9;
+  mix-blend-mode: darken; /* Effectively hides white background on dark surfaces */
+  filter: brightness(1.1) contrast(1.1);
+  opacity: 1;
 }
 
 .hero-main-img:hover {
