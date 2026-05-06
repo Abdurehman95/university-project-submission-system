@@ -5,7 +5,7 @@ import {
   FiGrid, FiFileText, FiUsers, FiClock, FiCheckSquare, 
   FiPlus, FiTrendingUp, FiLogOut, FiCalendar, FiBook,
   FiChevronRight, FiEdit3, FiTrash2, FiDownload, FiMessageSquare,
-  FiSend, FiBell, FiActivity, FiStar, FiX, FiMenu
+  FiSend, FiBell, FiActivity, FiStar, FiX, FiMenu, FiMaximize2
 } from 'react-icons/fi';
 import { showToast } from '../../utils/toast';
 import ThemeToggle from '../../components/common/ThemeToggle';
