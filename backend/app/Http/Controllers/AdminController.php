@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateUserRequest;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Project;
@@ -63,15 +64,13 @@ class AdminController extends Controller
         return response()->json($users);
     }
 
-    public function createUser(Request $request)
+    /**
+     * Create a new user (admin only).
+     * Mitigates: SQL Injection, Missing input validation, Plain-text passwords.
+     */
+    public function createUser(CreateUserRequest $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8',
-            'role_id' => 'required|integer|exists:roles,id',
-            'department_id' => 'nullable|integer|exists:departments,id',
-        ]);
+        $validated = $request->validated();
 
         $user = User::create([
             'name' => $validated['name'],
@@ -151,5 +150,85 @@ class AdminController extends Controller
         });
 
         return response()->json($departments);
+    }
+
+    public function getEarlyWarningData()
+    {
+        // Projects with no activity in the last 7 days
+        $sevenDaysAgo = now()->subDays(7);
+
+        $atRiskAssignments = \App\Models\ProjectAssignment::with(['project', 'student', 'group'])
+            ->where('status', '!=', 'Graded')
+            ->where('status', '!=', 'Completed')
+            ->where(function($query) use ($sevenDaysAgo) {
+                $query->whereDoesntHave('submissions', function($q) use ($sevenDaysAgo) {
+                    $q->where('created_at', '>', $sevenDaysAgo);
+                })->whereDoesntHave('comments', function($q) use ($sevenDaysAgo) {
+                    $q->where('created_at', '>', $sevenDaysAgo);
+                })->where('assigned_at', '<', $sevenDaysAgo);
+            })
+            ->get()->map(function($assignment) {
+                return [
+                    'id' => $assignment->id,
+                    'project_title' => $assignment->project->title,
+                    'student_name' => $assignment->student->name ?? ($assignment->group ? $assignment->group->name : 'N/A'),
+                    'last_activity' => $assignment->updated_at->diffForHumans(),
+                    'risk_level' => 'High',
+                    'days_inactive' => now()->diffInDays($assignment->updated_at),
+                ];
+            });
+
+        return response()->json($atRiskAssignments);
+    }
+
+    public function getDepartmentHeatmap()
+    {
+        $heatmap = Department::with(['users.submissions' => function($q) {
+            $q->select('submissions.id', 'submissions.status', 'submissions.created_at');
+        }])->get()->map(function($dept) {
+            $totalSubmissions = 0;
+            $gradedSubmissions = 0;
+
+            foreach ($dept->users as $user) {
+                $totalSubmissions += $user->submissions->count();
+                $gradedSubmissions += $user->submissions->where('status', 'Graded')->count();
+            }
+
+            return [
+                'name' => $dept->name,
+                'total' => $totalSubmissions,
+                'completed' => $gradedSubmissions,
+                'rate' => $totalSubmissions > 0 ? round(($gradedSubmissions / $totalSubmissions) * 100) : 0,
+            ];
+        });
+
+        return response()->json($heatmap);
+    }
+
+    public function exportReport()
+    {
+        $data = Department::withCount('users')->get();
+        
+        $filename = "system_report_" . date('Y-m-d') . ".csv";
+        $handle = fopen('php://output', 'w');
+        
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        
+        fputcsv($handle, ['Department Name', 'Total Students', 'Active Projects', 'Completion Rate %']);
+        
+        foreach ($data as $dept) {
+            fputcsv($handle, [
+                $dept->name,
+                $dept->users_count,
+                Project::whereHas('category', function($q) use ($dept) {
+                    $q->where('name', $dept->name); // Assuming category name matches dept name for simplicity in report
+                })->count(),
+                'N/A' // Placeholder
+            ]);
+        }
+        
+        fclose($handle);
+        exit;
     }
 }

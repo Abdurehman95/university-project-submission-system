@@ -88,6 +88,30 @@ class InstructorController extends Controller
         return response()->json(['message' => 'Project created successfully', 'project' => $project], 201);
     }
 
+    public function updateProject(Request $request, $id)
+    {
+        $project = Project::where('instructor_id', auth()->id())->findOrFail($id);
+        
+        $request->validate([
+            'title' => 'string|max:255',
+            'description' => 'string',
+            'deadline' => 'date',
+        ]);
+
+        $project->update($request->only(['title', 'description', 'deadline']));
+
+        // Log action
+        \App\Models\AuditLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'Updated Project: ' . $project->title,
+            'entity' => 'Project',
+            'entity_id' => $project->id,
+            'level' => 'Info'
+        ]);
+
+        return response()->json(['message' => 'Project updated successfully', 'project' => $project]);
+    }
+
     public function getSubmissions()
     {
         $projectIds = Project::where('instructor_id', auth()->id())->pluck('id');
@@ -142,6 +166,25 @@ class InstructorController extends Controller
 
         $submission->update(['status' => 'Graded']);
 
+        // Log action
+        \App\Models\AuditLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'Graded Submission',
+            'entity' => 'Submission',
+            'entity_id' => $submission->id,
+            'level' => 'Info'
+        ]);
+
+        // Notify Student
+        $notification = \App\Models\Notification::create([
+            'user_id' => $submission->assignment->student_id,
+            'title' => 'Project Graded',
+            'message' => "Your submission for '{$submission->assignment->project->title}' has been graded.",
+            'type' => 'grade',
+        ]);
+
+        broadcast(new \App\Events\NotificationSent($notification))->toOthers();
+
         return response()->json(['message' => 'Submission evaluated successfully']);
     }
 
@@ -164,6 +207,25 @@ class InstructorController extends Controller
         
         // Also update assignment status
         $submission->assignment->update(['status' => 'revision_required']);
+
+        // Log action
+        \App\Models\AuditLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'Requested Revision',
+            'entity' => 'Submission',
+            'entity_id' => $submission->id,
+            'level' => 'Warning'
+        ]);
+
+        // Notify Student
+        $notification = \App\Models\Notification::create([
+            'user_id' => $submission->assignment->student_id,
+            'title' => 'Revision Requested',
+            'message' => "The instructor has requested a revision for '{$submission->assignment->project->title}'.",
+            'type' => 'revision',
+        ]);
+
+        broadcast(new \App\Events\NotificationSent($notification))->toOthers();
 
         return response()->json(['message' => 'Revision requested successfully']);
     }

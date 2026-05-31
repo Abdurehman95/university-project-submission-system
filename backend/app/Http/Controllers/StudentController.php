@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SubmitProjectRequest;
 use Illuminate\Http\Request;
 use App\Models\Project;
 use App\Models\ProjectAssignment;
@@ -59,31 +60,23 @@ class StudentController extends Controller
         return response()->json($assignments);
     }
 
-    public function submitProject(Request $request, $assignmentId)
+    public function submitProject(SubmitProjectRequest $request, $assignmentId)
     {
-        $request->validate([
-            'files' => 'nullable|array',
-            'files.*' => 'file|max:10240', // 10MB max per file
-            'notes' => 'nullable|string'
-        ]);
 
         $assignment = ProjectAssignment::where('id', $assignmentId)
                         ->where('student_id', auth()->id())
                         ->firstOrFail();
 
-        // Check if a submission already exists for this assignment
-        $submission = Submission::where('assignment_id', $assignment->id)->first();
+        // Get the latest version number
+        $latestVersion = Submission::where('assignment_id', $assignment->id)->max('version') ?? 0;
+        $newVersion = $latestVersion + 1;
 
-        if ($submission) {
-            $submission->update(['status' => 'Under Review']);
-            // Optionally clear previous files if replacing them
-            $submission->files()->delete();
-        } else {
-            $submission = Submission::create([
-                'assignment_id' => $assignment->id,
-                'status' => 'Under Review',
-            ]);
-        }
+        $submission = Submission::create([
+            'assignment_id' => $assignment->id,
+            'version' => $newVersion,
+            'status' => 'Under Review',
+            'submitted_at' => now(),
+        ]);
 
         // Update assignment status
         $assignment->update(['status' => 'submitted']);
@@ -100,7 +93,7 @@ class StudentController extends Controller
             }
         }
 
-        return response()->json(['message' => 'Project submitted successfully', 'submission' => $submission], 201);
+        return response()->json(['message' => "Project version {$newVersion} submitted successfully", 'submission' => $submission], 201);
     }
 
     public function getGrades()

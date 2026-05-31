@@ -10,6 +10,7 @@ import { AnimatePresence } from 'framer-motion';
 import { showToast } from '../../utils/toast';
 import ThemeToggle from '../../components/common/ThemeToggle';
 import DropZone from '../../components/common/DropZone';
+import ProjectDiscussion from '../../components/ProjectDiscussion';
 import './StudentDashboard.css';
 
 const StudentDashboard = () => {
@@ -22,6 +23,10 @@ const StudentDashboard = () => {
   const [selectedAssignmentId, setSelectedAssignmentId] = useState('');
   const [file, setFile] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [showDiscussion, setShowDiscussion] = useState(false);
+  const [discussionAssignmentId, setDiscussionAssignmentId] = useState(null);
+  const [showHistory, setShowHistory] = useState(false);
+  const [submissionHistory, setSubmissionHistory] = useState([]);
 
   useEffect(() => {
     fetchData();
@@ -153,14 +158,23 @@ const StudentDashboard = () => {
                   <div className="section-header">
                     <h2><FiCalendar /> Active Milestones</h2>
                   </div>
-                  <div className="deadline-list" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                    <div className="deadline-list" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                     {assignments.map(a => (
                       <div key={a.id} className="deadline-item track" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: 'var(--color-bg-primary)', borderRadius: '12px', borderLeft: `4px solid #10b981` }}>
                         <div className="deadline-info">
                           <h4 style={{ fontWeight: 600 }}>{a.project_title}</h4>
                           <span style={{ fontSize: '0.85rem', opacity: 0.6 }}>{a.category} • {a.deadline}</span>
                         </div>
-                        <span className="status-badge status-active" style={{ fontSize: '0.85rem' }}>{a.status}</span>
+                        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                          <button 
+                            className="btn-icon" 
+                            onClick={() => { setDiscussionAssignmentId(a.id); setShowDiscussion(true); }}
+                            title="Open Discussion"
+                          >
+                            <FiMessageSquare />
+                          </button>
+                          <span className="status-badge status-active" style={{ fontSize: '0.85rem' }}>{a.status}</span>
+                        </div>
                       </div>
                     ))}
                     {assignments.length === 0 && <p style={{opacity: 0.6}}>No active assignments right now.</p>}
@@ -178,10 +192,19 @@ const StudentDashboard = () => {
                     <h2><FiTrendingUp /> Overall Progress</h2>
                   </div>
                   <div style={{ padding: '1rem' }}>
-                    <div className="progress-container" style={{ height: '12px' }}>
-                      <div className="progress-bar" style={{ width: '45%', background: 'var(--color-accent-gradient)' }}></div>
+                    {/* Predictive Progress Bar */}
+                    <div className="predictive-progress">
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                        <span>Days Remaining: 14</span>
+                        <span>Deliverables: 45%</span>
+                      </div>
+                      <div className="progress-container" style={{ height: '12px' }}>
+                        <div className="progress-bar" style={{ width: '45%', background: 'var(--color-accent-gradient)' }}></div>
+                      </div>
+                      <p style={{ fontSize: '0.8rem', opacity: 0.6, marginTop: '10px' }}>
+                        <FiAlertCircle size={12} /> Predicted finish date: May 21
+                      </p>
                     </div>
-                    <p style={{ textAlign: 'center', marginTop: '1rem', fontWeight: 600 }}>In Progress</p>
                   </div>
                 </motion.section>
               </div>
@@ -473,6 +496,13 @@ const StudentDashboard = () => {
       <main className="student-main">
         {renderSection()}
       </main>
+
+      {showDiscussion && (
+        <ProjectDiscussion 
+          assignmentId={discussionAssignmentId} 
+          onClose={() => setShowDiscussion(false)} 
+        />
+      )}
     </div>
   );
 };

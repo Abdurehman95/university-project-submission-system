@@ -38,4 +38,9 @@ class ProjectAssignment extends Model
     {
         return $this->hasMany(Submission::class, 'assignment_id');
     }
+
+    public function comments()
+    {
+        return $this->hasMany(ProjectComment::class, 'assignment_id');
+    }
 }

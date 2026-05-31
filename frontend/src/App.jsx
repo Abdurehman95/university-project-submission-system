@@ -44,6 +44,7 @@ class ErrorBoundary extends React.Component {
 }
 
 import ProtectedRoute from './components/layout/ProtectedRoute';
+import NotificationListener from './components/layout/NotificationListener';
 
 const AppContent = () => {
   const location = useLocation();
@@ -52,6 +53,7 @@ const AppContent = () => {
 
   return (
     <div className="app-wrapper">
+      <NotificationListener />
       <div className="bg-image-wrapper">
         <img src="/image.jpg" alt="University campus background" className="bg-image" />
       </div>
